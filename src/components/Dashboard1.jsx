@@ -96,8 +96,19 @@ export default function Dashboard1() {
         🗑️ Waste Processing System
       </Typography>
 
-      <Grid container spacing={3} sx={{ justifyContent: 'center', width: '100%', maxWidth: '1200px', mx: 'auto', alignItems: 'stretch', flexWrap: { xs: 'wrap', md: 'nowrap' } }}>
-        <Grid sx={{ display: 'flex', flexDirection: 'column', width: '100%', flexBasis: { sm: '50%', md: '50%' }, maxWidth: { sm: '50%', md: '50%' }, flex: { md: '0 0 50%' } }}>
+      <Grid container spacing={4} sx={{ 
+        justifyContent: 'center', 
+        width: '100%', 
+        maxWidth: '1400px', 
+        mx: 'auto',
+        alignItems: 'flex-start',
+        px: { xs: 2, sm: 3, md: 4 }
+      }}>
+        <Grid item xs={12} md={6} sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          height: 'fit-content'
+        }}>
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -105,7 +116,7 @@ export default function Dashboard1() {
             style={{ width: '100%' }}
           >
             <StyledCard sx={{ flex: 1, width: '100%' }}>
-              <CardContent>
+              <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <Typography variant="h6" sx={{ mb: 3, color: 'primary.light' }}>
                   Material Inputs
                 </Typography>
@@ -271,192 +282,234 @@ export default function Dashboard1() {
           </motion.div>
         </Grid>
 
-        <Grid sx={{ display: 'flex', flexDirection: 'column', width: '100%', flexBasis: { sm: '50%', md: '50%' }, maxWidth: { sm: '50%', md: '50%' }, flex: { md: '0 0 50%' } }}>
-          <Card sx={{ flex: 1, display: 'flex', flexDirection: 'column', borderRadius: 1, position: 'relative', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.04)', background: 'linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02))', width: '100%' }}>
+        <Grid item xs={12} md={6} sx={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          height: 'fit-content'
+        }}>
+          <Card sx={{ 
+            flex: 1, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            borderRadius: 1, 
+            position: 'relative', 
+            overflow: 'hidden', 
+            border: '1px solid rgba(255,255,255,0.04)', 
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02))',
+            width: '100%',
+            minHeight: 'fit-content'
+          }}>
             {/* top-right icon */}
             <Box sx={{ position: 'absolute', right: 16, top: 16, width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, background: 'rgba(255,255,255,0.02)' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2v6" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/><path d="M6 6l6 6 6-6" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/></svg>
             </Box>
-            <CardContent sx={{ flex: 1 }}>
+            <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" sx={{ mb: 2, color: '#00ffff' }}>System Outputs</Typography>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-                <Grid container spacing={3}>
+                <Box sx={{ 
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    sm: '1fr 1fr',
+                    md: '1fr 1fr',
+                    lg: '1fr 1fr 1fr'
+                  },
+                  gap: 3,
+                  alignItems: 'start'
+                }}>
                   {/* Pyrolysis Feed */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(251, 146, 60, 0.1)', 
-                      border: '1px solid rgba(251, 146, 60, 0.3)',
-                      boxShadow: '0 12px 40px rgba(251, 146, 60, 0.3), 0 4px 16px rgba(251, 146, 60, 0.2)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(251, 146, 60, 0.4), 0 6px 20px rgba(251, 146, 60, 0.25)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#fb923c', mb: 1 }}>Pyrolysis Feed</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {pyroFeed?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kg/day</Typography>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#fb923c', opacity: 0.8 }}>Total material to pyrolyzer</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  <Card sx={{ 
+                    background: 'rgba(251, 146, 60, 0.1)', 
+                    border: '1px solid rgba(251, 146, 60, 0.3)',
+                    borderRadius: 2,
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    height: 'fit-content',
+                    minHeight: '140px',
+                    '&:hover': {
+                      boxShadow: '0 8px 24px rgba(251, 146, 60, 0.3)',
+                      transform: 'translateY(-2px)',
+                      borderColor: 'rgba(251, 146, 60, 0.5)'
+                    }
+                  }}>
+                    <CardContent sx={{ p: 3 }}>
+                      <Typography variant="subtitle1" sx={{ color: '#fb923c', mb: 1, fontWeight: 600 }}>
+                        Pyrolysis Feed
+                      </Typography>
+                      <Typography variant="h3" sx={{ color: '#fff', mb: 1, fontWeight: 700, lineHeight: 1 }}>
+                        {pyroFeed?.toFixed(1)}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#ccc', mb: 1 }}>kg/day</Typography>
+                      <Typography variant="body2" sx={{ color: '#fb923c', opacity: 0.8 }}>
+                        Total material to pyrolyzer
+                      </Typography>
+                    </CardContent>
+                  </Card>
 
                   {/* SOFC Electricity */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(34, 197, 94, 0.1)', 
-                      border: '1px solid rgba(34, 197, 94, 0.3)',
-                      boxShadow: '0 12px 40px rgba(34, 197, 94, 0.35), 0 4px 16px rgba(16, 185, 129, 0.2)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(34, 197, 94, 0.45), 0 6px 20px rgba(16, 185, 129, 0.3)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#22c55e', mb: 1 }}>SOFC Electricity</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {energy?.electricKWh?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kWh/day</Typography>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#22c55e', opacity: 0.8 }}>From syngas fuel cell</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  <Card sx={{ 
+                    background: 'rgba(34, 197, 94, 0.1)', 
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                    borderRadius: 2,
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    height: 'fit-content',
+                    minHeight: '140px',
+                    '&:hover': {
+                      boxShadow: '0 8px 24px rgba(34, 197, 94, 0.3)',
+                      transform: 'translateY(-2px)',
+                      borderColor: 'rgba(34, 197, 94, 0.5)'
+                    }
+                  }}>
+                    <CardContent sx={{ p: 3 }}>
+                      <Typography variant="subtitle1" sx={{ color: '#22c55e', mb: 1, fontWeight: 600 }}>
+                        SOFC Electricity
+                      </Typography>
+                      <Typography variant="h3" sx={{ color: '#fff', mb: 1, fontWeight: 700, lineHeight: 1 }}>
+                        {energy?.electricKWh?.toFixed(1)}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#ccc', mb: 1 }}>kWh/day</Typography>
+                      <Typography variant="body2" sx={{ color: '#22c55e', opacity: 0.8 }}>
+                        From syngas fuel cell
+                      </Typography>
+                    </CardContent>
+                  </Card>
 
                   {/* Thermal Energy (Syngas) */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(249, 115, 22, 0.1)', 
-                      border: '1px solid rgba(249, 115, 22, 0.3)',
-                      boxShadow: '0 12px 40px rgba(249, 115, 22, 0.3), 0 4px 16px rgba(234, 88, 12, 0.25)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(249, 115, 22, 0.4), 0 6px 20px rgba(234, 88, 12, 0.35)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#f97316', mb: 1 }}>Thermal Energy (Syngas)</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {energy?.thermalKWh?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kWh/day</Typography>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#f97316', opacity: 0.8 }}>Heat from pyrolysis</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  <Card sx={{ 
+                    background: 'rgba(249, 115, 22, 0.1)', 
+                    border: '1px solid rgba(249, 115, 22, 0.3)',
+                    minHeight: '140px', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    boxShadow: '0 4px 16px rgba(249, 115, 22, 0.3), 0 4px 16px rgba(234, 88, 12, 0.25)',
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      boxShadow: '0 16px 48px rgba(249, 115, 22, 0.4), 0 6px 20px rgba(234, 88, 12, 0.35)',
+                      transform: 'translateY(-4px)'
+                    }
+                  }}>
+                    <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <Typography variant="h6" sx={{ color: '#f97316', mb: 1 }}>Thermal Energy (Syngas)</Typography>
+                      <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
+                        {energy?.thermalKWh?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kWh/day</Typography>
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#f97316', opacity: 0.8 }}>Heat from pyrolysis</Typography>
+                    </CardContent>
+                  </Card>
 
                   {/* Arc Furnace Thermal */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(255, 165, 0, 0.1)', 
-                      border: '1px solid rgba(255, 165, 0, 0.3)',
-                      boxShadow: '0 12px 40px rgba(255, 165, 0, 0.35), 0 4px 16px rgba(245, 158, 11, 0.2)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(255, 165, 0, 0.45), 0 6px 20px rgba(245, 158, 11, 0.3)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#ffa500', mb: 1 }}>Arc Furnace Thermal</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {arcThermal?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kWh/day</Typography>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#ffa500', opacity: 0.8 }}>From metal+glass processing</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  <Card sx={{ 
+                    background: 'rgba(255, 165, 0, 0.1)', 
+                    border: '1px solid rgba(255, 165, 0, 0.3)',
+                    minHeight: '140px', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    boxShadow: '0 4px 16px rgba(255, 165, 0, 0.35), 0 4px 16px rgba(245, 158, 11, 0.2)',
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      boxShadow: '0 16px 48px rgba(255, 165, 0, 0.45), 0 6px 20px rgba(245, 158, 11, 0.3)',
+                      transform: 'translateY(-4px)'
+                    }
+                  }}>
+                    <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <Typography variant="h6" sx={{ color: '#ffa500', mb: 1 }}>Arc Furnace Thermal</Typography>
+                      <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
+                        {arcThermal?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kWh/day</Typography>
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#ffa500', opacity: 0.8 }}>From metal+glass processing</Typography>
+                    </CardContent>
+                  </Card>
 
                   {/* Pyrolysis Oil */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(59, 130, 246, 0.1)', 
-                      border: '1px solid rgba(59, 130, 246, 0.3)',
-                      boxShadow: '0 12px 40px rgba(59, 130, 246, 0.3), 0 4px 16px rgba(37, 99, 235, 0.25)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(59, 130, 246, 0.4), 0 6px 20px rgba(37, 99, 235, 0.35)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#3b82f6', mb: 1 }}>Pyrolysis Oil</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {yields?.oilL?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>L/day</Typography>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#3b82f6', opacity: 0.8 }}>Liquid fuel produced</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  <Card sx={{ 
+                    background: 'rgba(59, 130, 246, 0.1)', 
+                    border: '1px solid rgba(59, 130, 246, 0.3)',
+                    minHeight: '140px', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    boxShadow: '0 4px 16px rgba(59, 130, 246, 0.3), 0 4px 16px rgba(37, 99, 235, 0.25)',
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      boxShadow: '0 16px 48px rgba(59, 130, 246, 0.4), 0 6px 20px rgba(37, 99, 235, 0.35)',
+                      transform: 'translateY(-4px)'
+                    }
+                  }}>
+                    <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <Typography variant="h6" sx={{ color: '#3b82f6', mb: 1 }}>Pyrolysis Oil</Typography>
+                      <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
+                        {yields?.oilL?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>L/day</Typography>
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#3b82f6', opacity: 0.8 }}>Liquid fuel produced</Typography>
+                    </CardContent>
+                  </Card>
 
                   {/* Biochar */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(107, 114, 128, 0.1)', 
-                      border: '1px solid rgba(107, 114, 128, 0.3)',
-                      boxShadow: '0 12px 40px rgba(107, 114, 128, 0.3), 0 4px 16px rgba(75, 85, 99, 0.25)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(107, 114, 128, 0.4), 0 6px 20px rgba(75, 85, 99, 0.35)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#6b7280', mb: 1 }}>Biochar</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {yields?.charKg?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kg/day</Typography>
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: '#6b7280', opacity: 0.8 }}>Carbon for construction</Typography>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  <Card sx={{ 
+                    background: 'rgba(107, 114, 128, 0.1)', 
+                    border: '1px solid rgba(107, 114, 128, 0.3)',
+                    minHeight: '140px', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    boxShadow: '0 4px 16px rgba(107, 114, 128, 0.3), 0 4px 16px rgba(75, 85, 99, 0.25)',
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      boxShadow: '0 16px 48px rgba(107, 114, 128, 0.4), 0 6px 20px rgba(75, 85, 99, 0.35)',
+                      transform: 'translateY(-4px)'
+                    }
+                  }}>
+                    <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <Typography variant="h6" sx={{ color: '#6b7280', mb: 1 }}>Biochar</Typography>
+                      <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
+                        {yields?.charKg?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>kg/day</Typography>
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#6b7280', opacity: 0.8 }}>Carbon for construction</Typography>
+                    </CardContent>
+                  </Card>
 
                   {/* 3D Printed Items */}
-                  <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-                    <Card sx={{ 
-                      background: 'rgba(16, 185, 129, 0.1)', 
-                      border: '1px solid rgba(16, 185, 129, 0.3)',
-                      boxShadow: '0 12px 40px rgba(16, 185, 129, 0.35), 0 4px 16px rgba(5, 150, 105, 0.2)',
-                      backdropFilter: 'blur(16px)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 16px 48px rgba(16, 185, 129, 0.45), 0 6px 20px rgba(5, 150, 105, 0.3)',
-                        transform: 'translateY(-4px)'
-                      }
-                    }}>
-                      <CardContent>
-                        <Typography variant="h6" sx={{ color: '#10b981', mb: 1 }}>3D Printed Items</Typography>
-                        <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
-                          {(plastics3D_to_printer * 10)?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>items/day</Typography>
+                  <Card sx={{ 
+                    background: 'rgba(16, 185, 129, 0.1)', 
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    minHeight: '140px', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35), 0 4px 16px rgba(5, 150, 105, 0.2)',
+                    backdropFilter: 'blur(16px)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      boxShadow: '0 16px 48px rgba(16, 185, 129, 0.45), 0 6px 20px rgba(5, 150, 105, 0.3)',
+                      transform: 'translateY(-4px)'
+                    }
+                  }}>
+                    <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                      <Typography variant="h6" sx={{ color: '#10b981', mb: 1 }}>3D Printed Items</Typography>
+                      <Typography variant="h4" sx={{ color: '#fff', mb: 1 }}>
+                        {(plastics3D_to_printer * 10)?.toFixed(1)} <Typography component="span" variant="body2" sx={{ color: '#ccc' }}>items/day</Typography>
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: '#10b981', opacity: 0.8 }}>Utensils and components</Typography>
+
+                      {/* Visual volume and allocation */}
+                      <Box sx={{ mt: 1 }}>
+                        <Typography variant="caption" sx={{ color: '#cbd5e1' }}>
+                          Printer allocation: {(plastics3D_to_printer || 0).toFixed(2)} kg • {plastics3D_to_printer_L.toFixed(2)} L ({pctPrinter.toFixed(0)}%)
                         </Typography>
-                        <Typography variant="body2" sx={{ color: '#10b981', opacity: 0.8 }}>Utensils and components</Typography>
+                        <LinearProgress variant="determinate" value={pctPrinter} sx={{ height: 10, borderRadius: 6, mt: 0.5, backgroundColor: 'rgba(255,255,255,0.04)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg,#9f7aea,#7c3aed)' } }} />
 
-                        {/* Visual volume and allocation */}
-                        <Box sx={{ mt: 1 }}>
-                          <Typography variant="caption" sx={{ color: '#cbd5e1' }}>
-                            Printer allocation: {(plastics3D_to_printer || 0).toFixed(2)} kg • {plastics3D_to_printer_L.toFixed(2)} L ({pctPrinter.toFixed(0)}%)
-                          </Typography>
-                          <LinearProgress variant="determinate" value={pctPrinter} sx={{ height: 10, borderRadius: 6, mt: 0.5, backgroundColor: 'rgba(255,255,255,0.04)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg,#9f7aea,#7c3aed)' } }} />
-
-                          <Typography variant="caption" sx={{ color: '#cbd5e1', mt: 1, display: 'block' }}>
-                            Pyrolyzer allocation: {(plastics3D_to_pyro || 0).toFixed(2)} kg • {plastics3D_to_pyro_L.toFixed(2)} L ({pctPyro.toFixed(0)}%)
-                          </Typography>
-                          <LinearProgress variant="determinate" value={pctPyro} sx={{ height: 10, borderRadius: 6, mt: 0.5, backgroundColor: 'rgba(255,255,255,0.04)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg,#fb923c,#f97316)' } }} />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                        <Typography variant="caption" sx={{ color: '#cbd5e1', mt: 1, display: 'block' }}>
+                          Pyrolyzer allocation: {(plastics3D_to_pyro || 0).toFixed(2)} kg • {plastics3D_to_pyro_L.toFixed(2)} L ({pctPyro.toFixed(0)}%)
+                        </Typography>
+                        <LinearProgress variant="determinate" value={pctPyro} sx={{ height: 10, borderRadius: 6, mt: 0.5, backgroundColor: 'rgba(255,255,255,0.04)', '& .MuiLinearProgress-bar': { background: 'linear-gradient(90deg,#fb923c,#f97316)' } }} />
+                      </Box>
+                    </CardContent>
+                  </Card>
                   
-                </Grid>
+                </Box>
               </motion.div>
             </CardContent>
           </Card>
