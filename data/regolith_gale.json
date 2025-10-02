@@ -1,0 +1,26 @@
+{
+  "site": "Gale Crater",
+  "source": "NASA MSL Curiosity rover studies (2012–2023)",
+  "bulk_density_kg_m3": 1580,
+  "grain_size_mm": {
+    "median": 0.35,
+    "d10": 0.06,
+    "d90": 1.2
+  },
+  "mineral_wt_percent": {
+    "SiO2": 52.3,
+    "Al2O3": 9.8,
+    "Fe2O3": 10.2,
+    "MgO": 6.1,
+    "CaO": 4.9,
+    "Na2O": 2.8,
+    "K2O": 0.6,
+    "TiO2": 0.8,
+    "SO3": 1.5,
+    "Cl": 0.4
+  },
+  "glass_content_pct": 12.5,
+  "carbonate_pct": 1.8,
+  "perchlorate_ppm": 650,
+  "notes": "Composition derived from Gale Crater sedimentary and igneous rock analyses by Curiosity rover (Grotzinger et al. 2014; McLennan et al. 2014). Silica-rich composition typical of evolved igneous processes and sedimentary layering."
+}
