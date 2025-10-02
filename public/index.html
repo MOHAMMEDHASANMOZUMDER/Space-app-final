@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste2Watt — Turning Trash into Utility</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Landing / Masthead -->
+    <section id="landing" class="hero-section">
+        <div class="mars-background">
+            <video autoplay muted loop class="background-video">
+                <source src="Mars loop.mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+                <div class="mars-fallback"></div>
+            </video>
+        </div>
+        
+
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="waste-text">Waste2Watt</span>
+                <div class="recycling-animation">
+                    <i class="fas fa-recycle"></i>
+                    <i class="fas fa-bolt"></i>
+                </div>
+            </h1>
+            <p class="hero-tagline">Turning Trash into Utility, Waste to Watt</p>
+    
+            
+            <div class="cta-buttons">
+                <button class="cta-btn" onclick="scrollToSection('engineering')">
+                    <i class="fas fa-wrench"></i> Explore the Design
+                </button>
+                <button class="cta-btn" onclick="scrollToSection('dashboards')">
+                    <i class="fas fa-sync-alt"></i> Explore the System
+                </button>
+                <button class="cta-btn" onclick="scrollToSection('team')">
+                    <i class="fas fa-users"></i> Meet the Team
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- System Overview (Hero Section) -->
+    <section id="overview" class="system-overview">
+        <div class="container">
+            <div class="overview-content">
+                <h2 class="section-title">System Overview</h2>
+                <div class="overview-text">
+                    <p class="lead">
+                        <strong>Waste2Watt is designing M-REGS → Multi-Stream Recycling and Energy Generation System.</strong>
+                    </p>
+                    <p>
+                        M-REGS is an integrated recycling-to-energy system designed for Mars missions and Earth applications.
+                        Our modular design converts plastics, fabrics, metals, and regolith into:
+                    </p>
+                    <ul class="benefits-list">
+                        <li><i class="fas fa-bolt"></i> <strong>Electrical power</strong> (via SOFC fuel cells and pyrolysis gas)</li>
+                        <li><i class="fas fa-fire"></i> <strong>Thermal energy</strong> (via arc furnace & pyro heat recovery loop)</li>
+                        <li><i class="fas fa-print"></i> <strong>3D-printing feedstock</strong> (plastics → filament)</li>
+                        <li><i class="fas fa-cubes"></i> <strong>Structural materials</strong> (regolith composites → bricks, panels, insulation)</li>
+                    </ul>
+                    <p class="mission-impact">
+                        By reusing waste heat and recycling water & reducing usage of electricity, M-REGS directly supports 
+                        NASA's mission goals: reducing habitat dependence on shipped electricity and water. 
+                        This ensures maximum autonomy for long-duration missions.
+                    </p>
+                </div>
+                
+                <div class="system-diagram">
+                    <div id="react-flow-diagram" class="interactive-diagram">
+                        <!-- ReactFlow diagram will be mounted here -->
+                        <div class="flowchart-container">
+                            <div id="root-flowchart" style="width: 100%; height: 850px; background: linear-gradient(135deg, #0a0f1a, #1a1f2e); border-radius: 16px;"></div>
+                        </div>
+                        <div class="flowchart-description">
+                            <p><i class="fas fa-info-circle"></i> <strong>Interactive System Diagram:</strong> Hover over each component to see detailed specifications and 3D models. The animated connections show the flow of materials and energy through the M-REGS system.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboards & Data Visualization -->
+    <section id="dashboards" class="dashboards-section">
+        <div class="container">
+            <h2 class="section-title">Dashboards & Data Visualization</h2>
+            <div class="dashboards-intro">
+                <p>
+                    For interactive exploration, we built three dashboards to simulate Waste2Watt's operation.
+                    These allow mission planners to adjust input waste streams, recycling intervals, and mission 
+                    durations — and instantly see system outputs.
+                </p>
+            </div>
+            
+            <div class="dashboard-embedded">
+                <div class="dashboard-header">
+                    <h3><i class="fas fa-chart-line"></i> Interactive Waste2Watt Dashboard</h3>
+                    <p>Real-time simulation of M-REGS system performance with adjustable parameters</p>
+                </div>
+                
+                <div class="dashboard-iframe-container">
+                    <div id="root-dashboard" style="width: 100%; height: 800px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);"></div>
+                </div>
+                
+                <div class="dashboard-controls">
+                    <div class="control-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Energy Dashboard: Monitor SOFC + thermal energy outputs</span>
+                    </div>
+                    <div class="control-item">
+                        <i class="fas fa-stream"></i>
+                        <span>Materials Dashboard: Track plastic, metal, and regolith flows</span>
+                    </div>
+                    <div class="control-item">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Efficiency Dashboard: Analyze water reuse and self-sufficiency metrics</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flowcharts Section -->
+    <section id="flowcharts" class="flowcharts-section">
+        <div class="container">
+            <h2 class="section-title">System Architecture</h2>
+            <div class="flowcharts-intro">
+                <p>
+                    Our system architecture can be viewed in multiple layers — from mission-level overview to 
+                    subsystem detail.
+                </p>
+            </div>
+            
+            <div class="flowchart-containers">
+                <div class="flowchart-item">
+                    <h3>Mission Overview</h3>
+                    <div class="mermaid-chart">
+                        <!-- Mermaid flowchart will be rendered here -->
+                        <div class="chart-placeholder">
+                            <i class="fas fa-sitemap"></i>
+                            <p>Mermaid Flowchart (Mission-level)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flowchart-item">
+                    <h3>Engineering Model</h3>
+                    <div class="simulink-chart">
+                        <!-- Simulink flowchart will be rendered here -->
+                        <div class="chart-placeholder">
+                            <i class="fas fa-code-branch"></i>
+                            <p>Simulink Model (I/O equations)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Engineering & CAD Section -->
+    <section id="engineering" class="engineering-section">
+        <div class="container">
+            <h2 class="section-title">Engineering & CAD</h2>
+            <div class="engineering-intro">
+                <p>
+                    M-REGS is engineered as a modular, serviceable machine. Each subsystem is modeled in 
+                    SolidWorks and CAD, with safety margins, thermal control, and service clearances.
+                </p>
+            </div>
+            
+            <div class="subsystems">
+           
+                <!-- Pyrolyzer -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-fire"></i>
+                            <p>Pyrolyzer 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-fire"></i> Pyrolyzer</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Converts plastics & organics into syngas, char, and pyro-oil.</p>
+                            <p><strong>Utility:</strong> Provides both energy (via SOFC) and materials (oil + char feedstock).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cyclone Separator -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                         <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203573&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203573'>Download</a>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-tornado"></i> Cyclone Separator</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Removes fine solid particles from hot pyro-gas.</p>
+                            <p><strong>Utility:</strong> Protects downstream condenser & SOFC, ensuring clean operation.</p>
+                        </div>
+                    </div>
+                </div>
+                     <!-- Shredder -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                          <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203575&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203575'>Download</a>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-cut"></i> Shredder</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Reduces size of plastic waste, fabrics, and organic materials to prepare them for downstream processing in pyrolysis or 3D printing paths.</p>
+                            <p><strong>Utility:</strong> Enables efficient processing by creating uniform particle sizes for optimal pyrolysis reactions and filament production.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Condenser + Oil Handling Train -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-snowflake"></i>
+                            <p>Condenser & Oil Train 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-snowflake"></i> Condenser + Oil Handling Train</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Condenses and collects pyro-oil safely.</p>
+                            <p><strong>Utility:</strong> Oil becomes binder for regolith composites, or emergency fuel.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oil Sump & Polisher -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-filter"></i>
+                            <p>Oil Sump & Polisher 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-filter"></i> Oil Sump & Polisher</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Settles heavy tars, filters oil for re-use.</p>
+                            <p><strong>Utility:</strong> Ensures long-term oil usability with minimal clogging.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOFC Generator -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203572&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203572'>Download</a>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-battery-three-quarters"></i> SOFC Cell</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Converts syngas into electricity at high efficiency.</p>
+                            <p><strong>Utility:</strong> Provides continuous power for habitat + recycling loop.</p>
+                        </div>
+                    </div>
+                </div>
+
+                
+                  <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203574&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203574'>Download</a>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-battery-three-quarters"></i>Generator</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Works as a generator for SOFC cells.</p>
+                            <p><strong>Utility:</strong> Provides power for habitat + recycling loop.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Arc Furnace -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-industry"></i>
+                            <p>Arc Furnace 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-industry"></i> Arc Furnace</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Melts metals and glass, recovers alloys.</p>
+                            <p><strong>Utility:</strong> Provides structural feedstock and waste heat recovery.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thermal Battery / HX Loop -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-thermometer-half"></i>
+                            <p>Thermal Battery 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-thermometer-half"></i> Thermal Battery / HX Loop</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Stores waste heat from pyro + arc.</p>
+                            <p><strong>Utility:</strong> Supplies steady thermal energy for washing, drying, and sintering.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D Printing Path -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-print"></i>
+                            <p>3D Printing Path 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-print"></i> 3D Printing Path</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Turns sorted plastics into filament.</p>
+                            <p><strong>Utility:</strong> Enables crew to manufacture tools, spare parts, and utensils.</p>
+                            
+                            <!-- Python Function Documentation -->
+                            <div class="function-docs">
+                                <h4>Plastic Routing Logic</h4>
+                                <div class="code-block">
+                                    <h5>plastic_routing() Function</h5>
+                                    <p><strong>Purpose:</strong> Intelligently routes 3D-printable plastics between the extruder (for printing) and pyrolyzer (for energy recovery) based on system conditions.</p>
+                                    
+                                    <div class="routing-rules">
+                                        <h6>Routing Rules (Priority Order):</h6>
+                                        <ol>
+                                            <li><strong>Energy Deficit:</strong> If SOFC output < energy demand, proportionally divert plastic to pyrolyzer for additional fuel</li>
+                                            <li><strong>Storage Overflow:</strong> If filament storage is full, send all plastic to pyrolyzer</li>
+                                            <li><strong>Manual Override:</strong> Crew can force ALL plastic to pyrolyzer (highest priority)</li>
+                                        </ol>
+                                    </div>
+                                    
+                                    <div class="routing-examples">
+                                        <h6>Examples:</h6>
+                                        <ul>
+                                            <li><strong>Normal:</strong> 1.5kg input → 100% to printer (1.5kg), 0% to pyro</li>
+                                            <li><strong>Energy Deficit:</strong> 1.5kg input, 20% energy shortfall → 80% to printer (1.2kg), 20% to pyro (0.3kg)</li>
+                                            <li><strong>Override Active:</strong> 1.5kg input → 0% to printer, 100% to pyro (1.5kg)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Water Recycling Loop -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-tint"></i>
+                            <p>Water Recycling 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-tint"></i> Water Recycling Loop</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Conserves water by filtering and reusing from washing stage.</p>
+                            <p><strong>Utility:</strong> Reduces reliance on shipped water — critical for Mars.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regolith Mixer → Sinterer -->
+                <div class="subsystem">
+                    <div class="subsystem-visual">
+                        <div class="cad-render">
+                            <i class="fas fa-cubes"></i>
+                            <p>Regolith Sinterer 3D CAD</p>
+                        </div>
+                    </div>
+                    <div class="subsystem-content">
+                        <h3><i class="fas fa-cubes"></i> Regolith Mixer → Sinterer</h3>
+                        <div class="subsystem-details">
+                            <p><strong>Why it exists:</strong> Binds regolith with char, oil, residues into composites.</p>
+                            <p><strong>Utility:</strong> Produces bricks, insulation, panels for habitat expansion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animation Section -->
+    <section id="animation" class="animation-section">
+        <div class="container">
+            <h2 class="section-title">System Animation</h2>
+            <div class="animation-intro">
+                <p>
+                    To make M-REGS accessible to non-engineers, we built animated models:
+                </p>
+            </div>
+            
+            <div class="animation-content">
+                <div class="animation-item">
+                    <div class="animation-visual">
+                        <i class="fas fa-bolt"></i>
+                        <h3>ReactFlow Particle Animation</h3>
+                        <p>Real-time flow of waste streams → outputs</p>
+                    </div>
+                </div>
+                
+                <div class="animation-item">
+                    <div class="animation-visual">
+                        <i class="fas fa-film"></i>
+                        <h3>Narrative Video</h3>
+                        <p>1–2 min showing: 'Trash in → Utility out.'</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bangladesh Design & Earth Application -->
+    <section id="earth-application" class="earth-section">
+        <div class="container">
+            <h2 class="section-title">Bangladesh Design & Earth Application</h2>
+            <div class="earth-intro">
+                <p>
+                    Beyond Mars, M-REGS addresses Earth's most urgent issue: plastic waste.
+                    We propose a miniaturized Dhaka model focused only on plastics → electricity + tools.
+                    Powered by solar panels (NASA weather API for sunlight data), this machine could help 
+                    urban areas turn waste into power, tools, and resilience.
+                </p>
+            </div>
+            
+            <div class="comparison-graphic">
+                <div class="version-comparison">
+                    <div class="mars-version">
+                        <h3><i class="fas fa-rocket"></i> Mars Version</h3>
+                        <div class="version-features">
+                            <p>Full M-REGS system</p>
+                            <ul>
+                                <li>Multi-stream recycling</li>
+                                <li>Regolith processing</li>
+                                <li>Thermal integration</li>
+                                <li>Life support integration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="earth-version">
+                        <h3><i class="fas fa-globe"></i> Dhaka Version</h3>
+                        <div class="version-features">
+                            <p>Plastic-focused system</p>
+                            <ul>
+                                <li>Plastic-only processing</li>
+                                <li>Solar power integration</li>
+                                <li>Urban deployment ready</li>
+                                <li>Community resilience focus</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <h2 class="section-title">The Waste2Watt Crew</h2>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-user-astronaut"></i>
+                    </div>
+                    <h3>Ahnaf Zaman</h3>
+                    <p class="member-role">Team Lead & System Architect</p>
+                    <div class="member-bio">
+                        <p>Leading the overall system design and integration strategy for M-REGS.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-drafting-compass"></i>
+                    </div>
+                    <h3>Ashab Shifat</h3>
+                    <p class="member-role">Mechanical Design & CAD Modeling</p>
+                    <div class="member-bio">
+                        <p>Designing and modeling all mechanical subsystems in SolidWorks.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Mohammad Hasan</h3>
+                    <h3>Software/Dashboard Lead</h3>
+                    <p class="member-role">Software Development & UI/UX</p>
+                    <div class="member-bio">
+                        <p>Building interactive dashboards and system visualization tools.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Sarwat Hossain</h3>
+                    <p class="member-role">Control Systems & Integration</p>
+                    <div class="member-bio">
+                        <p>Developing control algorithms and system integration protocols.</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-photo">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3>Outreach & Communication</h3>
+                    <p class="member-role">Public Engagement & Documentation</p>
+                    <div class="member-bio">
+                        <p>Managing project communication and educational outreach efforts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Closing / Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h2 class="footer-motto">No Waste. Just Watts. For Mars and for Earth.</h2>
+                
+                <div class="footer-links">
+                    <a href="#" class="footer-link">
+                        <i class="fas fa-rocket"></i> NASA Challenge
+                    </a>
+                    <a href="#" class="footer-link">
+                        <i class="fab fa-github"></i> GitHub Repo
+                    </a>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Waste2Watt Team. Built for NASA Space App Challenge 2025</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- React Components Integration -->
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+        
+        // Mount React components to specific divs
+        document.addEventListener('DOMContentLoaded', function() {
+            // The React app will be mounted via main.jsx
+            // We'll need to modify main.jsx to mount components to specific divs
+        });
+    </script>
+</body>
+</html>
