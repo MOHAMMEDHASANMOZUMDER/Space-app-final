@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/flowchart",
+      "destination": "/flowchart.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

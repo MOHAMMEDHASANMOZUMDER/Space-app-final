@@ -40,7 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const rootContainer = document.getElementById('root');
   if (rootContainer && !dashboardContainer && !flowchartContainer) {
     // Only mount to root if we're not in the integrated page
-    const isFlowchartRoute = window.location.pathname === '/flowchart' || window.location.hash === '#flowchart';
+    const isFlowchartRoute = window.location.pathname === '/flowchart' || 
+                           window.location.pathname.includes('flowchart') || 
+                           window.location.hash === '#flowchart';
     
     const AppToRender = isFlowchartRoute ? (
       <div style={{ 
@@ -49,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
         background: 'linear-gradient(135deg, #0a0f1a, #1a1f2e)',
         fontFamily: 'Inter, system-ui, Arial, sans-serif',
         margin: 0,
-        padding: 0
+        padding: 0,
+        overflow: 'hidden'
       }}>
         <Flowchart />
       </div>
