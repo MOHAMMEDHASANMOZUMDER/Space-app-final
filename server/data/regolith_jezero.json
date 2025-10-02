@@ -1,0 +1,26 @@
+{
+  "site": "Jezero Crater",
+  "source": "NASA PDS / Perseverance Rover PIXL-SHERLOC studies (2021–2023)",
+  "bulk_density_kg_m3": 1420,
+  "grain_size_mm": {
+    "median": 0.45,
+    "d10": 0.08,
+    "d90": 1.6
+  },
+  "mineral_wt_percent": {
+    "SiO2": 44.8,
+    "Al2O3": 7.9,
+    "Fe2O3": 13.6,
+    "MgO": 7.5,
+    "CaO": 6.8,
+    "Na2O": 1.9,
+    "K2O": 0.4,
+    "TiO2": 1.0,
+    "SO3": 2.1,
+    "Cl": 0.6
+  },
+  "glass_content_pct": 9.0,
+  "carbonate_pct": 2.5,
+  "perchlorate_ppm": 900,
+  "notes": "Composition derived from Jezero Crater crater-floor sediment and igneous rock analyses (Sun et al. 2023; Bell et al. 2022). Approximated with MGS-1 simulant where data were incomplete. Bulk density and grain size are averages of rover-derived soil mechanics and simulant analogs."
+}

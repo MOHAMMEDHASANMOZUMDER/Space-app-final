@@ -1,0 +1,534 @@
+:root {
+  /* Colors */
+  --color-primary: #00ffff;
+  --color-primary-light: #80ffff;
+  --color-secondary: #ff6b35;
+  --color-success: #00ff88;
+  --color-background: #0A0F1A;
+  --color-surface: #0d121d;
+  --color-foreground: #ffffff;
+  --color-muted: rgba(255, 255, 255, 0.7);
+  --color-border: rgba(0, 255, 255, 0.1);
+  
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  
+  /* Transitions */
+  --transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-transform: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #f8fafc;
+  min-height: 100vh;
+  line-height: 1.5;
+
+/* React Flow Custom Styles */
+.react-flow__node-custom {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.react-flow__handle {
+  background: #ff6b35;
+  border: 2px solid #fff;
+  width: 8px;
+  height: 8px;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
+
+.react-flow__controls {
+  background: rgba(26, 31, 46, 0.9);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 8px;
+}
+
+.react-flow__controls button {
+  background: rgba(26, 31, 46, 0.8);
+  color: #fff;
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 4px;
+}
+
+.react-flow__controls button:hover {
+  background: rgba(255, 107, 53, 0.2);
+}
+
+.react-flow__minimap {
+  background: rgba(26, 31, 46, 0.9);
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  border-radius: 8px;
+}
+
+.node-tooltip {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+  letter-spacing: -0.025em;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1f2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff6b35;
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Custom card hover effects */
+.MuiCard-root:hover {
+  transform: translateY(-2px);
+  transition: transform 0.3s ease;
+}
+
+/* Slider customization */
+.MuiSlider-root {
+  color: #00ffff !important;
+}
+
+.MuiSlider-track {
+  background: linear-gradient(90deg, #00ffff, #ff6b35) !important;
+}
+
+.MuiSlider-thumb {
+  background: #ff6b35 !important;
+  border: 2px solid #00ffff !important;
+}
+
+/* Button customization */
+.MuiButton-root {
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+}
+
+/* Chip customization */
+.MuiChip-root {
+  border-radius: 16px !important;
+  font-weight: 500 !important;
+}
+
+/* Tab customization */
+.MuiTab-root {
+  text-transform: none !important;
+  font-weight: 600 !important;
+  min-height: 64px !important;
+}
+
+/* Custom Tailwind Classes for Dashboard Components */
+/* Dashboard + card utilities (plain CSS replacement for Tailwind @apply) */
+.dashboard-card {
+  background: rgba(55, 65, 81, 0.3); /* gray-700/30 */
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(107, 114, 128, 0.5);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+}
+
+.output-card {
+  background: rgba(17,24,39,0.6); /* card */
+  border: 1px solid rgba(107,114,128,0.35);
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 6px 12px rgba(2,6,23,0.45);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+.output-card:hover { box-shadow: 0 10px 26px rgba(2,6,23,0.6); transform: translateY(-3px); }
+
+.mars-card { background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(247,147,30,0.06)); border-radius: 10px; border: 1px solid rgba(255,107,53,0.12); }
+.energy-card { background: linear-gradient(135deg, rgba(16,185,129,0.06), rgba(5,150,105,0.04)); border-radius: 10px; border: 1px solid rgba(16,185,129,0.08); }
+
+/* Slider helper classes (thumb color) */
+.slider-primary::-webkit-slider-thumb { background: #00bfff; }
+.slider-mars::-webkit-slider-thumb { background: #ff6b35; }
+.slider-cosmic::-webkit-slider-thumb { background: #9932cc; }
+.slider-energy::-webkit-slider-thumb { background: #10b981; }
+
+/* Theme color helpers */
+.bg-gradient-mars { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+.bg-gradient-cosmic { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.text-mars { color: #ff6b35; }
+.text-cosmic { color: #9932cc; }
+.text-energy { color: #10b981; }
+.text-primary { color: #00bfff; }
+.text-secondary { color: #9aa4b2; }
+.text-muted-foreground { color: #9fb3c8; }
+.text-foreground { color: #ffffff; }
+
+.bg-card { background: rgba(17,24,39,0.5); }
+.bg-secondary { background: rgba(75,85,99,0.35); }
+.border-border { border-color: rgba(107,114,128,0.6); }
+.bg-popover { background: #111827; }
+.text-popover-foreground { color: #f3f4f6; }
+.bg-accent { background: rgba(75,85,99,0.5); }
+.text-accent-foreground { color: #f3f4f6; }
+
+/* Small utility tweaks used in components */
+.muted { color: #9fb3c8; }
+.accent { color: #ffd9b3; }
+.card-grid { display: grid; gap: 0.75rem; }
+
+/* App layout and tab styles */
+.app-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+.dashboard-content { padding: 1rem 0; }
+
+/* MUI Tab tweaks to make tabs more visible */
+.MuiTabs-root { border-bottom: 1px solid rgba(255,255,255,0.04); }
+.MuiTab-root { text-transform: none; font-weight: 700; min-height: 56px; }
+.MuiTabs-indicator { background-color: #ff6b35; height: 3px !important; }
+
+/* Ensure each tab panel uses full width */
+[role="tabpanel"] { width: 100%; }
+
+/* Dashboard2 Construction Cards Layout Override */
+.dashboard2-construction-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: stretch !important;
+  text-align: center !important;
+}
+
+.dashboard2-construction-card .card-header {
+  flex-shrink: 0 !important;
+}
+
+.dashboard2-construction-card .card-content {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.dashboard2-construction-card .card-footer {
+  flex-shrink: 0 !important;
+}
+
+/* Dashboard2 Text Color Overrides */
+.dashboard2-text-purple-100 { color: #c798fa !important; }
+.dashboard2-text-purple-50 { color: #bbaaff !important; }
+.dashboard2-text-purple-200 { color: #f9f195 !important; }
+.dashboard2-text-purple-300 { color: #c4b5fd !important; }
+
+.dashboard2-text-orange-100 { color: #fed7aa !important; }
+.dashboard2-text-orange-50 { color: #fff7ed !important; }
+.dashboard2-text-orange-200 { color: #fecaca !important; }
+.dashboard2-text-orange-300 { color: #fdba74 !important; }
+
+.dashboard2-text-blue-100 { color: #dbeafe !important; }
+.dashboard2-text-blue-50 { color: #f3a28e !important; }
+.dashboard2-text-blue-200 { color: #bfdbfe !important; }
+.dashboard2-text-blue-300 { color: #93c5fd !important; }
+
+.dashboard2-text-yellow-100 { color: #fef3c7 !important; }
+.dashboard2-text-yellow-50 { color: #fffbeb !important; }
+.dashboard2-text-yellow-200 { color: #fde68a !important; }
+.dashboard2-text-yellow-300 { color: #fcd34d !important; }
+
+.dashboard2-text-emerald-100 { color: #d1fae5 !important; }
+.dashboard2-text-emerald-200 { color: #a7f3d0 !important; }
+.dashboard2-text-emerald-300 { color: #6ee7b7 !important; }
+
+.dashboard2-text-cyan-100 { color: #86f0fa !important; }
+.dashboard2-text-cyan-200 { color: #a5f3fc !important; }
+.dashboard2-text-cyan-300 { color: #67e8f9 !important; }
+
+.dashboard2-text-slate-100 { color: #92c4f6 !important; }
+.dashboard2-text-slate-200 { color: #e2e8f0 !important; }
+.dashboard2-text-slate-300 { color: #95c4fe !important; }
+.dashboard2-text-amber-200 { color: #fcd34d !important; }
+
+/* Enhanced Slider Text Colors */
+.dashboard2-slider-label { color: #8fa9ff !important; font-weight: 600 !important; }
+.dashboard2-slider-value { color: #89a0ff !important; font-weight: 700 !important; }
+.dashboard2-slider-unit { color: #a5b4fc !important; font-weight: 500 !important; }
+
+/* Better Light Text Colors - No More White */
+.dashboard2-text-light-primary { color: #e0e7ff !important; }
+.dashboard2-text-light-secondary { color: #c7d2fe !important; }
+.dashboard2-text-light-accent { color: #a5b4fc !important; }
+.dashboard2-text-warm-light { color: #fef3c7 !important; }
+.dashboard2-text-cool-light { color: #dbeafe !important; }
+.dashboard2-text-mint-light { color: #d1fae5 !important; }
+
+/* Stronger overrides for conflicting styles */
+div.dashboard2-card h2.dashboard2-text-warm-light,
+div.dashboard2-card h2.dashboard2-text-mint-light,
+div.dashboard2-card h3.dashboard2-text-light-primary { color: inherit !important; }
+
+div.dashboard2-card .dashboard2-text-warm-light { color: #fef3c7 !important; }
+div.dashboard2-card .dashboard2-text-mint-light { color: #d1fae5 !important; }
+div.dashboard2-card .dashboard2-text-light-primary { color: #e0e7ff !important; }
+div.dashboard2-card .dashboard2-text-light-secondary { color: #c7d2fe !important; }
+div.dashboard2-card .dashboard2-text-light-accent { color: #a5b4fc !important; }
+div.dashboard2-card .dashboard2-text-cool-light { color: #dbeafe !important; }
+
+/* Override any white text specifically */
+.dashboard2-card span,
+.dashboard2-card div,
+.dashboard2-card p,
+.dashboard2-card h1,
+.dashboard2-card h2,
+.dashboard2-card h3 {
+  color: inherit;
+}
+
+/* Force specific colors on dashboard2 elements */
+.dashboard2-card .dashboard2-text-warm-light * { color: #fef3c7 !important; }
+.dashboard2-card .dashboard2-text-mint-light * { color: #d1fae5 !important; }
+.dashboard2-card .dashboard2-text-light-primary * { color: #e0e7ff !important; }
+.dashboard2-card .dashboard2-text-light-secondary * { color: #c7d2fe !important; }
+.dashboard2-card .dashboard2-text-light-accent * { color: #a5b4fc !important; }
+.dashboard2-card .dashboard2-text-cool-light * { color: #dbeafe !important; }
+
+/* Override any remaining white text with extreme specificity */
+.dashboard2-card-summary h3.dashboard2-text-light-primary { color: #e0e7ff !important; }
+.dashboard2-card-summary .dashboard2-text-warm-light { color: #fef3c7 !important; }
+.dashboard2-card-summary .dashboard2-text-cool-light { color: #dbeafe !important; }
+.dashboard2-card-summary .dashboard2-text-mint-light { color: #d1fae5 !important; }
+.dashboard2-card-summary .dashboard2-text-light-primary { color: #e0e7ff !important; }
+.dashboard2-card-summary .dashboard2-text-light-secondary { color: #c7d2fe !important; }
+.dashboard2-card-summary .dashboard2-text-light-accent { color: #a5b4fc !important; }
+
+/* Slider overrides */
+.dashboard2-slider-label { color: #fecc87 !important; font-weight: 600 !important; }
+.dashboard2-slider-value { color: #fc9e7c !important; font-weight: 700 !important; }
+.dashboard2-slider-unit { color: #a5b4fc !important; font-weight: 500 !important; }
+
+/* Override Tailwind's text-white and any white colors */
+[class*="dashboard2"] .text-white,
+[class*="dashboard2"] [style*="color: white"],
+[class*="dashboard2"] [style*="color: #ffffff"],
+[class*="dashboard2"] [style*="color: #fff"] {
+  color: #8da7ff !important;
+}
+
+/* Nuclear option - override ALL white text colors in dashboard2 sections */
+.dashboard2-card *,
+.dashboard2-card-summary *,
+.dashboard2-slider-large * {
+  color: inherit !important;
+}
+
+/* Ensure our custom classes always win */
+.dashboard2-text-light-primary,
+.dashboard2-text-light-primary *,
+span.dashboard2-text-light-primary,
+div.dashboard2-text-light-primary {
+  color: #f2aa73 !important;
+}
+
+.dashboard2-text-light-secondary,
+.dashboard2-text-light-secondary *,
+span.dashboard2-text-light-secondary,
+div.dashboard2-text-light-secondary {
+  color: #c7d2fe !important;
+}
+
+.dashboard2-text-light-accent,
+.dashboard2-text-light-accent *,
+span.dashboard2-text-light-accent,
+div.dashboard2-text-light-accent {
+  color: #a5b4fc !important;
+}
+
+.dashboard2-text-warm-light,
+.dashboard2-text-warm-light *,
+span.dashboard2-text-warm-light,
+div.dashboard2-text-warm-light,
+h2.dashboard2-text-warm-light,
+h3.dashboard2-text-warm-light {
+  color: #fef3c7 !important;
+}
+
+.dashboard2-text-cool-light,
+.dashboard2-text-cool-light *,
+span.dashboard2-text-cool-light,
+div.dashboard2-text-cool-light {
+  color: #dbeafe !important;
+}
+
+.dashboard2-text-mint-light,
+.dashboard2-text-mint-light *,
+span.dashboard2-text-mint-light,
+div.dashboard2-text-mint-light,
+h2.dashboard2-text-mint-light {
+  color: #d1fae5 !important;
+}
+
+/* Custom slider input styling */
+.slider-input {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+}
+
+.slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 0 2px currentColor;
+  transition: all 0.3s ease;
+}
+
+.slider-input::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px currentColor;
+}
+
+.slider-input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: 2px solid currentColor;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.slider-input::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
+
+/* Enhanced React Flow Flowchart Styles */
+.node-tooltip {
+  border-radius: 16px; 
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 20px rgba(255, 107, 53, 0.2); 
+  overflow: hidden; 
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+.model-canvas { 
+  width:100%; 
+  height:180px; 
+  border-radius:8px; 
+  background: linear-gradient(135deg,#071028,#0f1419,#021221); 
+  border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+/* Enhanced React Flow Styles */
+.react-flow__edge-path {
+  stroke-dasharray: 5,5;
+  animation: dash 3s linear infinite;
+}
+
+.react-flow__edge.animated .react-flow__edge-path {
+  stroke-dasharray: 8,4;
+  animation: dash 2s linear infinite;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -1000; }
+}
+
+/* Pulsing effect for active nodes */
+@keyframes pulse-glow {
+  0% { 
+    box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.8), 0 0 30px rgba(255, 107, 53, 0.6);
+  }
+  100% { 
+    box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+  }
+}
+
+.rf-node-group:hover .react-flow__node {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Enhanced edge labels */
+.react-flow__edge-text {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(10, 15, 26, 0.9);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  color: #e6eef8;
+}
+
+/* Custom scrollbar for React Flow */
+.react-flow__renderer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.react-flow__renderer::-webkit-scrollbar-track {
+  background: rgba(26, 31, 46, 0.3);
+}
+
+.react-flow__renderer::-webkit-scrollbar-thumb {
+  background: rgba(255, 107, 53, 0.5);
+  border-radius: 4px;
+}
+
+.react-flow__renderer::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 107, 53, 0.7);
+}

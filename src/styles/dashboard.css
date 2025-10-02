@@ -1,0 +1,504 @@
+/* Dashboard2 Modern Glassy Styles */
+.dashboard2-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+@media (min-width: 1024px) {
+  .dashboard2-flex {
+    flex-direction: row;
+    gap: 3rem;
+    align-items: flex-start;
+  }
+}
+
+.dashboard2-card {
+  border-radius: 2rem;
+  box-shadow: 0 8px 40px 0 rgba(0,0,0,0.15);
+  padding: 2.5rem;
+  margin-bottom: 0;
+  background: rgba(30,41,59,0.7);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  position: relative;
+}
+.dashboard2-card-glass {
+  backdrop-filter: blur(18px) saturate(1.2);
+  background: linear-gradient(135deg, rgba(30,41,59,0.85) 60%, rgba(51,65,85,0.7) 100%);
+}
+.dashboard2-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  color: #22d3ee;
+}
+.dashboard2-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-foreground);
+  letter-spacing: -0.01em;
+}
+.dashboard2-nasa-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 1.25rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.dashboard2-nasa-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-cosmic, #7dd3fc);
+  margin-bottom: 0.25rem;
+}
+.dashboard2-nasa-site {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+.dashboard2-nasa-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--color-foreground);
+}
+.dashboard2-slider-section {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+.dashboard2-warning {
+  background: rgba(239,68,68,0.13);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: 1rem;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1.2rem;
+}
+.dashboard2-warning-title {
+  color: #f87171 !important;
+  font-weight: 700 !important;
+  font-size: 1rem;
+}
+.dashboard2-warning-desc {
+  color: #fca5a5 !important;
+  font-size: 0.92rem;
+}
+.dashboard2-regolith-type {
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.dashboard2-regolith-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin-bottom: 0.7rem;
+}
+.dashboard2-regolith-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+/* Regolith Type Button Styling */
+.dashboard2-regolith-btns button {
+  background: rgba(255,255,255,0.08);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: 1rem;
+  padding: 0.7rem 1.2rem;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.dashboard2-regolith-btns button:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+.dashboard2-regolith-btns button:active {
+  transform: translateY(0);
+}
+
+/* Selected state for regolith buttons */
+.dashboard2-regolith-btns button[data-variant="default"] {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.2) 0%, rgba(239, 68, 68, 0.15) 100%);
+  border-color: rgba(251, 146, 60, 0.4);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(251, 146, 60, 0.25);
+}
+.dashboard2-regolith-btns button[data-variant="default"]:hover {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.3) 0%, rgba(239, 68, 68, 0.2) 100%);
+  border-color: rgba(251, 146, 60, 0.5);
+  box-shadow: 0 6px 20px rgba(251, 146, 60, 0.3);
+}
+
+/* Badge styling within buttons */
+.dashboard2-regolith-btns button .ml-2,
+.dashboard2-regolith-badge {
+  background: rgba(255,255,255,0.15);
+  color: #ffffff !important;
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  border: none;
+}
+
+/* Additional button styling overrides */
+.dashboard2-regolith-btn {
+  background: rgba(255,255,255,0.08) !important;
+  border: 1.5px solid rgba(255,255,255,0.15) !important;
+  color: #ffffff !important;
+}
+.dashboard2-regolith-btn:hover {
+  background: rgba(255,255,255,0.12) !important;
+  border-color: rgba(255,255,255,0.25) !important;
+  color: #ffffff !important;
+}
+.dashboard2-regolith-selected {
+  background: linear-gradient(135deg, rgba(251, 146, 60, 0.25) 0%, rgba(239, 68, 68, 0.18) 100%) !important;
+  border-color: rgba(251, 146, 60, 0.5) !important;
+}
+.dashboard2-output-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+.dashboard2-recommend-card {
+  background: rgba(255,255,255,0.04);
+  border-radius: 1.25rem;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 0.5rem;
+}
+
+/* Construction Recommendations specific styling */
+.dashboard2-recommend-card h3 {
+  color: #ffffff !important;
+}
+.dashboard2-recommend-card p {
+  color: #d1d5db !important;
+}
+.dashboard2-recommend-card .text-green-400 {
+  color: #4ade80 !important;
+}
+.dashboard2-recommend-card .text-blue-400 {
+  color: #60a5fa !important;
+}
+.dashboard2-recommend-card .text-yellow-400 {
+  color: #facc15 !important;
+}
+.dashboard2-recommend-card .text-red-400 {
+  color: #f87171 !important;
+}
+.dashboard2-recommend-card .text-gray-300 {
+  color: #d1d5db !important;
+}
+.dashboard2-card-summary {
+  margin-top: 2.5rem;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, rgba(30,41,59,0.85) 60%, rgba(51,65,85,0.7) 100%);
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.10);
+  padding: 2rem 2rem 1.5rem 2rem;
+  border: 1.5px solid rgba(255,255,255,0.08);
+}
+
+/* Enhanced Slider Styles for Dashboard2 */
+.dashboard2-slider-large {
+  margin-bottom: 1.8rem;
+  padding: 0.5rem 0;
+}
+.dashboard2-slider-large .space-y-2 {
+  margin-bottom: 1.5rem;
+}
+.dashboard2-slider-large label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.005em;
+}
+.dashboard2-slider-large .relative {
+  width: 100%;
+  padding: 0 8px;
+}
+.dashboard2-slider-large input[type="range"] {
+  width: calc(100% - 8px);
+  height: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  margin: 0 4px;
+}
+.dashboard2-slider-large input[type="range"]:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateY(-1px);
+}
+.dashboard2-slider-large input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 0 0 2px rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* Small NASA data badge used near regolith displays */
+.nasa-badge {
+  background: rgba(14, 116, 144, 0.12);
+  color: #7dd3fc;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(125,211,252,0.08);
+}
+
+.dashboard2-slider-large input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35), 0 0 0 3px rgba(255,255,255,0.15);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+}
+.dashboard2-slider-large input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 0 4px rgba(255,255,255,0.2);
+}
+.dashboard2-slider-large .text-xs {
+  font-size: 0.95rem;
+  color: #d1d5db;
+  font-weight: 500;
+}
+.dashboard2-slider-large span {
+  color: #f3f4f6;
+  font-weight: 600;
+}
+
+/* Color-specific slider tracks */
+.dashboard2-slider-large input[type="range"].slider-mars {
+  background: linear-gradient(90deg, rgba(251, 146, 60, 0.3) 0%, rgba(255,255,255,0.12) 100%);
+}
+.dashboard2-slider-large input[type="range"].slider-cosmic {
+  background: linear-gradient(90deg, rgba(125, 211, 252, 0.3) 0%, rgba(255,255,255,0.12) 100%);
+}
+.dashboard2-slider-large input[type="range"].slider-energy {
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.3) 0%, rgba(255,255,255,0.12) 100%);
+}
+.dashboard2-slider-large input[type="range"].slider-primary {
+  background: linear-gradient(90deg, rgba(147, 51, 234, 0.3) 0%, rgba(255,255,255,0.12) 100%);
+}
+.dashboard2-slider-large input[type="range"].slider-secondary {
+  background: linear-gradient(90deg, rgba(107, 114, 128, 0.3) 0%, rgba(255,255,255,0.12) 100%);
+}
+
+/* Card Enhancement */
+@media (min-width: 1024px) {
+  .dashboard2-card-left {
+    flex: 1;
+    min-width: 0;
+  }
+  .dashboard2-card-right {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* Ensure all text is visible on dark background */
+.dashboard2-card p,
+.dashboard2-card span,
+.dashboard2-card div {
+  color: #ffffff !important;
+}
+.dashboard2-card .text-sm {
+  color: #d1d5db !important;
+}
+.dashboard2-card .text-base {
+  color: #f3f4f6 !important;
+}
+.dashboard2-card .text-lg {
+  color: #ffffff !important;
+}
+.dashboard2-card .text-xl {
+  color: #ffffff !important;
+}
+
+/* Specific color overrides for important elements */
+.dashboard2-card .text-gray-200 {
+  color: #e5e7eb !important;
+}
+.dashboard2-card .text-gray-300 {
+  color: #d1d5db !important;
+}
+.dashboard2-card .text-white {
+  color: #ffffff !important;
+}
+
+/* Material Flow Summary specific styling */
+.dashboard2-card-summary p {
+  color: #e5e7eb !important;
+}
+.dashboard2-card-summary .text-orange-400 {
+  color: #fb923c !important;
+}
+.dashboard2-card-summary .text-blue-400 {
+  color: #60a5fa !important;
+}
+.dashboard2-card-summary .text-cyan-400 {
+  color: #22d3ee !important;
+}
+.dashboard2-card-summary .text-purple-400 {
+  color: #c084fc !important;
+}
+.dashboard2-card-summary .text-yellow-400 {
+  color: #facc15 !important;
+}
+.dashboard2-card-summary .text-green-400 {
+  color: #4ade80 !important;
+}
+/* Dashboard Shared Styles */
+.dashboard {
+  padding: var(--space-6);
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--color-background) 0%, #1e293b 100%);
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: var(--space-6);
+  letter-spacing: -0.025em;
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  transition: var(--transition-all);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.input-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.input-value {
+  color: var(--color-primary-light);
+  font-weight: 600;
+}
+
+/* Custom slider styles */
+.slider {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  position: relative;
+}
+
+.slider-track {
+  background: var(--color-primary);
+  height: 100%;
+  border-radius: 2px;
+}
+
+.slider-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--color-primary-light);
+  border-radius: 50%;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+/* Stats card */
+.stats-card {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.stats-label {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.stats-value {
+  color: var(--color-foreground);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.stats-unit {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+}

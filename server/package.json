@@ -1,0 +1,20 @@
+{
+  "name": "waste2watt-regolith-api",
+  "version": "1.0.0",
+  "description": "NASA regolith data API server for Waste2Watt demo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["nasa", "regolith", "mars", "api"],
+  "author": "Waste2Watt Team",
+  "license": "MIT"
+}

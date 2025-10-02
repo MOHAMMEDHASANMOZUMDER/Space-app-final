@@ -1,0 +1,298 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Slider } from './Slider';
+import { cn } from '../lib/utils';
+
+export default function Dashboard2() {
+  const {
+    raw_regPercent, setRegPercent,
+    raw_metalPercent, setMetalPercent,
+    raw_glassPercent, setGlassPercent,
+    raw_charPercent, setCharPercent,
+    raw_oilPercent, setOilPercent,
+    raw_residuePercent, setResiduePercent,
+    regPercent, metalPercent, glassPercent, charPercent, oilPercent, residuePercent,
+    regolithType, setRegolithType,
+    brickCalc,
+    strengthMPa,
+    totalAvailableMass,
+    yields,
+    regolithData,
+    isOverallocated
+  } = useSystem();
+
+  // Safe defaults
+  const safeYields = yields || { charKg: 0, oilL: 0 };
+  const safeBrickCalc = brickCalc || { count: 0, brickMassKg: 0 };
+  const safeStrengthMPa = strengthMPa || 0;
+  const safeTotalAvailableMass = totalAvailableMass || 0;
+
+  const totalPercentage = raw_regPercent + raw_metalPercent + raw_glassPercent + raw_charPercent + raw_oilPercent + raw_residuePercent;
+
+  const regolithTypes = [
+    { value: 'Basaltic', label: 'Basaltic', multiplier: 1.1, color: 'mars' },
+    { value: 'Silica-rich', label: 'Silica-rich', multiplier: 1.3, color: 'cosmic' },
+    { value: 'Sulfate-rich', label: 'Sulfate-rich', multiplier: 0.9, color: 'energy' },
+    { value: 'Carbonate-rich', label: 'Carbonate-rich', multiplier: 1.0, color: 'secondary' }
+  ];
+
+  if (!regPercent && regPercent !== 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <h1 className="text-2xl font-bold text-muted-foreground">Loading Dashboard 2...</h1>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-6 p-6"
+    >
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-bold bg-gradient-cosmic bg-clip-text text-transparent">
+          Regolith Processing & Construction
+        </h1>
+        <p className="text-muted-foreground">
+          Utilize Mars regolith with recycled materials for building construction
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Input Controls */}
+        <div className="dashboard-card space-y-6">
+          <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+            <Mountain className="w-5 h-5 text-accent" />
+            Mixture Composition
+          </h2>
+
+          {/* NASA Data Display */}
+          {regolithData && (
+            <div className="bg-secondary/30 rounded-lg p-4 space-y-2">
+              <h3 className="text-sm font-medium text-cosmic">NASA Regolith Data</h3>
+              <p className="text-xs text-muted-foreground">{regolithData.site}</p>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <span>SiO₂: {regolithData.mineral_wt_percent.SiO2}%</span>
+                <span>Fe₂O₃: {regolithData.mineral_wt_percent.Fe2O3}%</span>
+                <span>Al₂O₃: {regolithData.mineral_wt_percent.Al2O3}%</span>
+                <span>MgO: {regolithData.mineral_wt_percent.MgO}%</span>
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-4">
+            <Slider
+              label="Mars Regolith"
+              value={raw_regPercent}
+              onChange={setRegPercent}
+              min={50}
+              max={150}
+              step={1}
+              unit="%"
+              color="mars"
+            />
+
+            <Slider
+              label="Recycled Metals"
+              value={raw_metalPercent}
+              onChange={setMetalPercent}
+              min={0}
+              max={50}
+              step={1}
+              unit="%"
+              color="cosmic"
+            />
+
+            <Slider
+              label="Recycled Glass"
+              value={raw_glassPercent}
+              onChange={setGlassPercent}
+              min={0}
+              max={50}
+              step={1}
+              unit="%"
+              color="secondary"
+            />
+
+            <div className="space-y-1">
+              <Slider
+                label="Biochar (from pyrolysis)"
+                value={raw_charPercent}
+                onChange={setCharPercent}
+                min={0}
+                max={30}
+                step={1}
+                unit="%"
+                color="primary"
+              />
+              <p className="text-xs text-muted-foreground">
+                Available: {safeYields.charKg.toFixed(1)} kg/day
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <Slider
+                label="Pyrolysis Oil"
+                value={raw_oilPercent}
+                onChange={setOilPercent}
+                min={0}
+                max={50}
+                step={1}
+                unit="%"
+                color="energy"
+              />
+              <p className="text-xs text-muted-foreground">
+                Available: {safeYields.oilL.toFixed(1)} L/day
+              </p>
+            </div>
+
+            <Slider
+              label="Other Residues"
+              value={raw_residuePercent}
+              onChange={setResiduePercent}
+              min={0}
+              max={50}
+              step={1}
+              unit="%"
+              color="secondary"
+            />
+          </div>
+
+          {/* Total percentage warning */}
+          {isOverallocated && (
+            <div className="bg-destructive/20 border border-destructive/50 rounded-lg p-3">
+              <p className="text-sm text-destructive font-medium">
+                Total: {totalPercentage}% exceeds 100%
+              </p>
+              <p className="text-xs text-destructive/80">
+                Adjust composition percentages to stay within available materials
+              </p>
+            </div>
+          )}
+
+          {/* Regolith Type Selection */}
+          <div className="space-y-3 pt-4 border-t border-border">
+            <h3 className="font-medium text-foreground">Regolith Type</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {regolithTypes.map((type) => (
+                <Button
+                  key={type.value}
+                  variant={regolithType === type.value ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setRegolithType(type.value)}
+                  className={cn(
+                    "text-xs",
+                    regolithType === type.value &&
+                    type.color === 'mars' && "bg-mars text-white",
+                    regolithType === type.value &&
+                    type.color === 'cosmic' && "bg-cosmic text-white",
+                    regolithType === type.value &&
+                    type.color === 'energy' && "bg-energy text-white"
+                  )}
+                >
+                  {type.label}
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {type.multiplier}×
+                  </Badge>
+                </Button>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Strength multipliers based on mineral composition and grain structure
+            </p>
+          </div>
+        </div>
+
+        {/* Outputs */}
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+            <Hammer className="w-5 h-5 text-energy" />
+            Construction Products
+          </h2>
+
+          <div className="grid grid-cols-1 gap-4">
+            <OutputCard
+              title="Bricks Produced"
+              value={safeBrickCalc.count}
+              unit="bricks"
+              subtitle={`${safeBrickCalc.brickMassKg.toFixed(1)} kg total mass`}
+              icon={<Layers className="w-6 h-6" />}
+              variant="mars"
+            />
+
+            <OutputCard
+              title="Brick Strength"
+              value={safeStrengthMPa}
+              unit="MPa"
+              subtitle={`${regolithType} regolith composition`}
+              icon={<Shield className="w-6 h-6" />}
+              variant="cosmic"
+            />
+
+            <OutputCard
+              title="Construction Grade"
+              value={safeStrengthMPa > 10 ? 'Structural' : safeStrengthMPa > 5 ? 'Standard' : 'Basic'}
+              subtitle={`${safeStrengthMPa > 10 ? 'Load-bearing capable' : safeStrengthMPa > 5 ? 'General construction' : 'Non-structural only'}`}
+              icon={<Shield className="w-6 h-6" />}
+              variant="default"
+            />
+          </div>
+
+          {/* Construction recommendations */}
+          <div className="dashboard-card bg-secondary/30">
+            <h3 className="text-lg font-semibold text-foreground mb-3">
+              Construction Recommendations
+            </h3>
+            <div className="text-sm space-y-2">
+              {safeStrengthMPa > 15 && (
+                <p className="text-energy">
+                  ✓ Excellent strength - suitable for pressure vessel construction
+                </p>
+              )}
+              {safeStrengthMPa > 10 && safeStrengthMPa <= 15 && (
+                <p className="text-cosmic">
+                  ✓ Good strength - suitable for structural walls and foundations
+                </p>
+              )}
+              {safeStrengthMPa > 5 && safeStrengthMPa <= 10 && (
+                <p className="text-primary">
+                  → Standard grade - suitable for interior walls and partitions
+                </p>
+              )}
+              {safeStrengthMPa <= 5 && (
+                <p className="text-destructive">
+                  ⚠ Low strength - suitable only for non-load bearing applications
+                </p>
+              )}
+              <p className="text-muted-foreground">
+                Optimize metal and glass content for higher strength requirements
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Material Flow */}
+      <div className="dashboard-card">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
+          Material Flow Summary
+        </h3>
+        <div className="text-sm text-muted-foreground space-y-2">
+          <p>
+            • <span className="text-mars">{raw_regPercent}% Mars Regolith</span> + <span className="text-cosmic">{raw_metalPercent}% Metals</span> + <span className="text-secondary">{raw_glassPercent}% Glass</span>
+          </p>
+          <p>
+            • <span className="text-primary">{raw_charPercent}% Biochar</span> + <span className="text-energy">{raw_oilPercent}% Oil</span> binder system
+          </p>
+          <p>
+            • Mixed → Pressed → Sintered → <span className="text-foreground">{safeBrickCalc.count} bricks @ {safeStrengthMPa} MPa</span>
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
