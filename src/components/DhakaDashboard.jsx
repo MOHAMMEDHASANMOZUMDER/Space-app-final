@@ -1,16 +1,64 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { Box, Card, CardContent, Typography, Grid, LinearProgress, Button, IconButton, Slider, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { useSystem } from '../context/SystemContext';
+
+// Custom styled components
+const GradientCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(135deg, #1e3a8a 100%, #3b82f6 50%, #06b6d4 20%)',
+  color: 'white',
+  borderRadius: '16px',
+  boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+  },
+}));
+
+const MetricCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
+  color: 'white',
+  borderRadius: '12px',
+  border: '1px solid rgba(59, 130, 246, 0.3)',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'scale(1.05)',
+    borderColor: 'rgba(59, 130, 246, 0.6)',
+    boxShadow: '0 10px 25px rgba(59, 130, 246, 0.2)',
+  },
+}));
+
+const ControlCard = styled(Card)(({ theme }) => ({
+  background: 'linear-gradient(145deg, #1f2937 0%, #374151 100%)',
+  borderRadius: '12px',
+  border: '1px solid rgba(34, 197, 94, 0.3)',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    borderColor: 'rgba(34, 197, 94, 0.6)',
+    boxShadow: '0 8px 20px rgba(34, 197, 94, 0.2)',
+  },
+}));
 
 const DhakaDashboard = () => {
-  // Core operational state
-  const [wasteIntake, setWasteIntake] = useState(250); // kg/day
-  const [projectionDays, setProjectionDays] = useState(7);
-  const [diversionOverride, setDiversionOverride] = useState(false);
+  const {
+    dhakaWasteIntake: wasteIntake,
+    setDhakaWasteIntake: setWasteIntake,
+    dhakaProjectionDays: projectionDays,
+    setDhakaProjectionDays: setProjectionDays,
+    dhakaDiversionOverride: diversionOverride,
+    setDhakaDiversionOverride: setDiversionOverride,
+    dhakaSolarIrradiance,
+    setDhakaSolarIrradiance,
+    dhakaSystemOperational,
+    setDhakaSystemOperational
+  } = useSystem();
   
   // Location and weather data
   const [latitude, setLatitude] = useState(23.8103); // Dhaka coordinates
   const [longitude, setLongitude] = useState(90.4125);
-  const [solarIrradiance, setSolarIrradiance] = useState(5.2); // kWh/m²/day
+  const solarIrradiance = dhakaSolarIrradiance;
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +74,7 @@ const DhakaDashboard = () => {
       if (data.properties && data.properties.parameter && data.properties.parameter.ALLSKY_SFC_SW_DWN) {
         const irradianceValues = Object.values(data.properties.parameter.ALLSKY_SFC_SW_DWN);
         const avgIrradiance = irradianceValues.reduce((sum, val) => sum + val, 0) / irradianceValues.length;
-        setSolarIrradiance(avgIrradiance);
+        setDhakaSolarIrradiance(avgIrradiance);
         setWeatherData(data);
       }
     } catch (error) {
@@ -40,543 +88,907 @@ const DhakaDashboard = () => {
     const dailyWaste = wasteIntake;
     const totalWaste = dailyWaste * projectionDays;
     
+    // Processing allocation based on diversion override
+    let printerAllocation, pyrolyzerAllocation, threedPrintedItems;
+    
+    if (diversionOverride) {
+      // All waste goes to pyrolyzer
+      printerAllocation = 0;
+      pyrolyzerAllocation = dailyWaste;
+      threedPrintedItems = 0;
+    } else {
+      // Normal split: 31% to printer, 69% to pyrolyzer
+      printerAllocation = dailyWaste * 0.31;
+      pyrolyzerAllocation = dailyWaste * 0.69;
+      threedPrintedItems = (printerAllocation / dailyWaste) * 4.7; // 4.7 items per day at full capacity
+    }
+    
     // Processing stages with efficiency factors
     const plasticSorted = dailyWaste * 0.95; // 95% sorting efficiency
     const plasticShredded = plasticSorted * 0.98; // 98% shredding efficiency
     const plasticWashed = plasticShredded * 0.92; // 92% washing efficiency (contaminant removal)
     const plasticDried = plasticWashed * 0.96; // 96% drying efficiency
     
-    // Energy generation from plastic via SOFC
-    const solfcInput = plasticDried * 0.6; // 60% goes to SOFC
-    const solfcEnergyDaily = solfcInput * 2.5; // kWh per kg plastic
-    const solfcEnergyTotal = solfcEnergyDaily * projectionDays;
+    // SOFC energy generation from pyrolyzer allocation
+    const solfcEnergy = pyrolyzerAllocation * 2.5; // 2.5 kWh per kg plastic
     
-    // Thermal energy recovery
-    const thermalRecovery = solfcEnergyDaily * 0.35; // 35% thermal recovery
-    const thermalReuse = thermalRecovery * 0.80; // 80% thermal reuse efficiency
+    // Thermal energy reuse (saves dryer energy)
+    const thermalReuse = pyrolyzerAllocation * 0.8; // 0.8 kWh thermal per kg
     
-    // Solar energy generation
-    const solarPanelArea = 50; // m² solar panel array
-    const solarEnergyDaily = solarPanelArea * solarIrradiance * 0.18; // 18% panel efficiency
-    const solarEnergyTotal = solarEnergyDaily * projectionDays;
+    // Solar panel energy from NASA API
+    const solarPanelArea = 50; // m² for Dhaka system
+    const solarEfficiency = 0.22; // 22% panel efficiency
+    const solarEnergy = solarIrradiance * solarPanelArea * solarEfficiency;
     
-    // Total energy and sustainability metrics
-    const totalEnergyDaily = solfcEnergyDaily + thermalReuse + solarEnergyDaily;
-    const totalEnergyProjection = totalEnergyDaily * projectionDays;
+    // Total energy generation
+    const totalEnergyGenerated = solfcEnergy + solarEnergy + thermalReuse;
     
-    // Water recycling calculations
-    const waterUsed = plasticWashed * 15; // 15L per kg for washing
-    const waterRecycled = waterUsed * 0.85; // 85% water recycling rate
-    const waterWasted = waterUsed - waterRecycled;
+    // System consumption (varies with override mode)
+    const baseConsumption = 25; // kWh/day base
+    const printerConsumption = printerAllocation * 0.2; // 0.2 kWh per kg for printing
+    const pyrolyzerConsumption = pyrolyzerAllocation * 0.15; // 0.15 kWh per kg for pyrolysis
+    const systemConsumption = baseConsumption + printerConsumption + pyrolyzerConsumption;
     
-    // Sustainability percentages
-    const energySelfSufficiency = Math.min(((solfcEnergyDaily + thermalReuse + solarEnergyDaily) / (dailyWaste * 3)) * 100, 100);
-    const wasteUtilization = (plasticDried / dailyWaste) * 100;
-    const waterRecyclingRate = (waterRecycled / waterUsed) * 100;
+    const netEnergyOutput = totalEnergyGenerated - systemConsumption;
+    const energySelfSufficiency = Math.min((totalEnergyGenerated / systemConsumption) * 100, 100);
+    
+    // Water recycling (improves with higher pyrolyzer usage)
+    const waterRecycleRate = diversionOverride ? 95 : 85; // Higher efficiency in pyrolyzer mode
+    const waterReused = (plasticWashed * 15 * waterRecycleRate) / 100; // 15L per kg, with recycling rate
+    
+    // Overall waste utilization
+    const wasteUtilization = ((plasticDried / dailyWaste) * 100);
+    
+    // Environmental impact
+    const co2Avoided = plasticDried * 2.1; // kg CO2/kg plastic avoided from landfill
     
     return {
-      dailyWaste,
       totalWaste,
-      plasticProcessed: plasticDried,
-      solfcEnergy: solfcEnergyTotal,
-      thermalEnergy: thermalReuse * projectionDays,
-      solarEnergy: solarEnergyTotal,
-      totalEnergy: totalEnergyProjection,
-      waterRecycled,
-      waterWasted,
+      printerAllocation,
+      pyrolyzerAllocation,
+      threedPrintedItems,
+      plasticSorted,
+      plasticShredded,
+      plasticWashed,
+      plasticDried,
+      solfcEnergy,
+      thermalReuse,
+      solarEnergy,
+      totalEnergyGenerated,
+      netEnergyOutput,
+      systemConsumption,
       energySelfSufficiency,
+      waterRecycleRate,
+      waterReused,
       wasteUtilization,
-      waterRecyclingRate
+      co2Avoided
     };
   };
 
   const metrics = calculateMetrics();
 
-  const energyBreakdown = [
-    { name: 'SOFC Generation', value: metrics.solfcEnergy, color: '#10b981' },
-    { name: 'Thermal Recovery', value: metrics.thermalEnergy, color: '#f59e0b' },
-    { name: 'Solar Generation', value: metrics.solarEnergy, color: '#3b82f6' }
+  // Chart data (scaled by projection days)
+  const energyData = [
+    { name: 'SOFC', value: metrics.solfcEnergy * projectionDays, color: '#10b981' },
+    { name: 'Solar', value: metrics.solarEnergy * projectionDays, color: '#f59e0b' },
+    { name: 'Thermal', value: metrics.thermalReuse * projectionDays, color: '#8b5cf6' },
+    { name: 'Consumption', value: -(metrics.systemConsumption * projectionDays), color: '#ef4444' }
   ];
 
-  const sustainabilityData = [
-    { metric: 'Energy Self-Sufficiency', percentage: metrics.energySelfSufficiency },
-    { metric: 'Waste Utilization', percentage: metrics.wasteUtilization },
-    { metric: 'Water Recycling', percentage: metrics.waterRecyclingRate }
+  const wasteFlowData = [
+    { stage: 'Input', amount: wasteIntake },
+    { stage: 'Sorted', amount: metrics.plasticSorted },
+    { stage: 'Shredded', amount: metrics.plasticShredded },
+    { stage: 'Washed', amount: metrics.plasticWashed },
+    { stage: 'Processed', amount: metrics.plasticDried }
   ];
 
-  const dailyTrend = Array.from({ length: projectionDays }, (_, i) => ({
-    day: i + 1,
-    energy: metrics.totalEnergy / projectionDays,
-    waste: metrics.dailyWaste,
-    efficiency: metrics.energySelfSufficiency
-  }));
+  const efficiencyData = [
+    { name: 'Processing', efficiency: metrics.wasteReduction },
+    { name: 'Energy Gen', efficiency: metrics.energySelfSufficiency },
+    { name: 'Overall', efficiency: (metrics.wasteReduction + metrics.energySelfSufficiency) / 2 }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-slate-800/95 to-gray-800/95 backdrop-blur-sm rounded-3xl p-8 border border-emerald-400/30 shadow-2xl shadow-emerald-500/20">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-5xl font-bold text-white drop-shadow-2xl" style={{color: '#ffffff !important', textShadow: '0 2px 4px rgba(0,0,0,0.8)'}}>
-                M-REGS-P Dhaka Control Center
-              </h1>
-              <p className="text-emerald-200 font-semibold mt-3 text-lg drop-shadow-lg">
-                Mars Recycling & Energy Generation System - Plastic Optimized
-              </p>
-            </div>
-            <div className="flex items-center space-x-6 bg-emerald-500/10 rounded-2xl p-4 border border-emerald-400/20">
-              <div className="w-4 h-4 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
-              <span className="text-emerald-200 font-bold text-lg">System Online</span>
-            </div>
-          </div>
-        </div>
+    <Box sx={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #374151 50%, #000000 100%)',
+      padding: 4,
+    }}>
+      <Box sx={{ maxWidth: '1400px', margin: '0 auto' }}>
+        
+        {/* Enhanced Header */}
+        <GradientCard sx={{ mb: 4, p: 4, position: 'relative', overflow: 'hidden' }}>
+          <Box sx={{ 
+            position: 'absolute', 
+            top: 0, 
+            right: 0, 
+            width: 128, 
+            height: 128, 
+            background: 'rgba(16, 185, 129, 0.1)', 
+            borderRadius: '50%', 
+            transform: 'translate(50%, -50%)' 
+          }} />
+          <Box sx={{ 
+            position: 'absolute', 
+            bottom: 0, 
+            left: 0, 
+            width: 96, 
+            height: 96, 
+            background: 'rgba(20, 184, 166, 0.1)', 
+            borderRadius: '50%', 
+            transform: 'translate(-50%, 50%)' 
+          }} />
+          
+          <Box sx={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Box sx={{
+                  width: 64,
+                  height: 64,
+                  background: 'linear-gradient(135deg, #10b981, #14b8a6, #22c55e)',
+                  borderRadius: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '2rem'
+                }}>
+                  🏭
+                </Box>
+                <Box>
+                  <Typography variant="h2" sx={{
+                    fontWeight: 800,
+                    background: 'linear-gradient(45deg, #a7f3d0, #5eead4, #86efac)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    lineHeight: 1.2
+                  }}>
+                    M-REGS-P Control Center
+                  </Typography>
+                  <Typography variant="h5" sx={{ color: '#6ee7b7', fontWeight: 700, mt: 1 }}>
+                    Dhaka Operations Hub
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography variant="h6" sx={{ 
+                color: '#a7f3d0', 
+                fontWeight: 600, 
+                pl: 11,
+                maxWidth: '600px',
+                lineHeight: 1.6,
+                mb: 2
+              }}>
+                Mars Recycling & Energy Generation System - Plastic Optimized for Urban Deployment
+              </Typography>
+              
+              {/* NASA API Integration Indicator */}
+              <Box sx={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: 1.5, 
+                background: 'rgba(245, 158, 11, 0.2)', 
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                borderRadius: '20px', 
+                px: 3, 
+                py: 1,
+                ml: 11,
+                mb: 2
+              }}>
+                <Typography sx={{ fontSize: '0.875rem', color: '#fbbf24', fontWeight: 700 }}>
+                  🛰️ NASA POWER API INTEGRATION
+                </Typography>
+                <Typography sx={{ fontSize: '0.875rem', color: '#fed7aa' }}>
+                  Real-time solar irradiance: {solarIrradiance.toFixed(2)} kWh/m²/day
+                </Typography>
+              </Box>
+              
+              <Box sx={{ display: 'flex', gap: 2, pl: 11, pt: 1 }}>
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  background: 'rgba(16, 185, 129, 0.2)',
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '50px',
+                  border: '1px solid rgba(16, 185, 129, 0.3)'
+                }}>
+                  <Box sx={{
+                    width: 12,
+                    height: 12,
+                    backgroundColor: '#10b981',
+                    borderRadius: '50%'
+                  }} />
+                  <Typography sx={{ color: '#a7f3d0', fontWeight: 600 }}>System Online</Typography>
+                </Box>
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  background: 'rgba(20, 184, 166, 0.2)',
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '50px',
+                  border: '1px solid rgba(20, 184, 166, 0.3)'
+                }}>
+                  <Box sx={{
+                    width: 12,
+                    height: 12,
+                    backgroundColor: '#14b8a6',
+                    borderRadius: '50%'
+                  }} />
+                  <Typography sx={{ color: '#5eead4', fontWeight: 600 }}>Auto Mode</Typography>
+                </Box>
+                <Box sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  background: 'rgba(34, 197, 94, 0.2)',
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: '50px',
+                  border: '1px solid rgba(34, 197, 94, 0.3)'
+                }}>
+                  <Box sx={{
+                    width: 12,
+                    height: 12,
+                    backgroundColor: '#22c55e',
+                    borderRadius: '50%'
+                  }} />
+                  <Typography sx={{ color: '#86efac', fontWeight: 600 }}>Eco Mode</Typography>
+                </Box>
+              </Box>
+            </Box>
+            
+            <Box sx={{ textAlign: 'right' }}>
+              <Card sx={{
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(20, 184, 166, 0.3), rgba(34, 197, 94, 0.3))',
+                backdropFilter: 'blur(10px)',
+                borderRadius: 3,
+                border: '2px solid rgba(16, 185, 129, 0.25)',
+                p: 3,
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 10px 25px rgba(16, 185, 129, 0.4)'
+                }
+              }}>
+                <Typography variant="h4" sx={{
+                  fontWeight: 700,
+                  background: 'linear-gradient(45deg, #a7f3d0, #5eead4)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  mb: 2
+                }}>
+                  🌱 Sustainable Operations
+                </Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography sx={{ color: '#a7f3d0', fontWeight: 600 }}>Energy Self-Sufficient</Typography>
+                    <Box sx={{ 
+                      color: '#a7f3d0', 
+                      background: 'rgba(16, 185, 129, 0.2)', 
+                      px: 1, 
+                      py: 0.5, 
+                      borderRadius: '50px',
+                      fontSize: '0.875rem'
+                    }}>
+                      ✓
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography sx={{ color: '#5eead4', fontWeight: 600 }}>Water Recycling</Typography>
+                    <Box sx={{ 
+                      color: '#5eead4', 
+                      background: 'rgba(20, 184, 166, 0.2)', 
+                      px: 1, 
+                      py: 0.5, 
+                      borderRadius: '50px',
+                      fontSize: '0.875rem'
+                    }}>
+                      85%
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography sx={{ color: '#86efac', fontWeight: 600 }}>Carbon Neutral</Typography>
+                    <Box sx={{ 
+                      color: '#86efac', 
+                      background: 'rgba(34, 197, 94, 0.2)', 
+                      px: 1, 
+                      py: 0.5, 
+                      borderRadius: '50px',
+                      fontSize: '0.875rem'
+                    }}>
+                      ✓
+                    </Box>
+                  </Box>
+                </Box>
+              </Card>
+            </Box>
+          </Box>
+        </GradientCard>
 
         {/* Control Panel */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <Grid container spacing={4} sx={{ mb: 4 }}>
           {/* Waste Intake Control */}
-          <div className="bg-gradient-to-br from-slate-800/90 to-gray-800/90 backdrop-blur-sm rounded-2xl p-8 border border-emerald-400/30 shadow-2xl shadow-emerald-500/10 space-y-6">
-            <h3 className="text-2xl font-bold text-emerald-200 mb-6 drop-shadow-lg">Waste Intake Control</h3>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-emerald-100 font-semibold mb-3 text-lg drop-shadow">
-                  Daily Plastic Intake: <span className="text-emerald-300 font-bold text-xl">{wasteIntake} kg/day</span>
-                </label>
-                <input
-                  type="range"
-                  min="50"
-                  max="500"
-                  value={wasteIntake}
-                  onChange={(e) => setWasteIntake(Number(e.target.value))}
-                  className="w-full h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer slider-enhanced"
-                />
-                <div className="flex justify-between text-emerald-300 mt-2 font-semibold">
-                  <span>50 kg</span>
-                  <span>500 kg</span>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-emerald-100 font-semibold mb-3 text-lg drop-shadow">
-                  Projection Period: <span className="text-emerald-300 font-bold text-xl">{projectionDays} days</span>
-                </label>
-                <input
-                  type="range"
-                  min="1"
-                  max="30"
-                  value={projectionDays}
-                  onChange={(e) => setProjectionDays(Number(e.target.value))}
-                  className="w-full h-4 bg-slate-700 rounded-lg appearance-none cursor-pointer slider-enhanced"
-                />
-                <div className="flex justify-between text-emerald-300 mt-2 font-semibold">
-                  <span>1 day</span>
-                  <span>30 days</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* NASA Weather Integration */}
-          <div className="bg-gradient-to-br from-slate-800/90 to-gray-800/90 backdrop-blur-sm rounded-2xl p-8 border border-cyan-400/30 shadow-2xl shadow-cyan-500/10 space-y-6">
-            <h3 className="text-2xl font-bold text-cyan-200 mb-6 drop-shadow-lg">NASA Weather API</h3>
-            <div className="space-y-6">
-              <div>
-                <label className="block text-cyan-100 font-semibold mb-3 text-lg drop-shadow">
-                  Solar Irradiance: <span className="text-cyan-300 font-bold text-xl">{solarIrradiance.toFixed(1)} kWh/m²/day</span>
-                </label>
-                <div className="bg-cyan-500/10 rounded-xl p-4 border border-cyan-400/20">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-cyan-200 font-semibold">Location:</span>
-                    <span className="text-cyan-100">Dhaka, Bangladesh</span>
-                  </div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-cyan-200 font-semibold">Coordinates:</span>
-                    <span className="text-cyan-100">{latitude}°N, {longitude}°E</span>
-                  </div>
-                  <button
-                    onClick={fetchNASAWeatherData}
-                    disabled={loading}
-                    className="w-full text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02] disabled:scale-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{
-                      background: loading 
-                        ? 'linear-gradient(135deg, #64748b 0%, #475569 100%)' 
-                        : 'linear-gradient(135deg, #0891b2 0%, #0e7490 100%)',
-                      color: '#ffffff',
-                      boxShadow: loading
-                        ? '0 2px 8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-                        : '0 4px 12px rgba(8, 145, 178, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+          <Grid item xs={12} lg={4}>
+            <ControlCard sx={{ p: 3, position: 'relative', overflow: 'hidden' }}>
+              <Box sx={{ position: 'relative', zIndex: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Box sx={{
+                    width: 48,
+                    height: 48,
+                    background: 'linear-gradient(135deg, #10b981, #14b8a6)',
+                    borderRadius: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem'
+                  }}>
+                    ♻️
+                  </Box>
+                  <Typography variant="h5" sx={{ color: '#10b981', fontWeight: 700 }}>
+                    Waste Intake Control
+                  </Typography>
+                </Box>
+                
+                <Box sx={{ mb: 3 }}>
+                  <Typography sx={{ color: '#a7f3d0', mb: 2 }}>Daily Waste Input: {wasteIntake} kg</Typography>
+                  <Slider
+                    value={wasteIntake}
+                    onChange={(e, newValue) => setWasteIntake(newValue)}
+                    min={50}
+                    max={500}
+                    sx={{
+                      color: '#10b981',
+                      '& .MuiSlider-thumb': {
+                        backgroundColor: '#10b981',
+                      },
+                      '& .MuiSlider-track': {
+                        backgroundColor: '#10b981',
+                      },
+                      '& .MuiSlider-rail': {
+                        backgroundColor: 'rgba(16, 185, 129, 0.3)',
+                      },
                     }}
-                  >
-                    {loading ? 'Fetching NASA Data...' : 'Update Solar Data'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+                  />
+                </Box>
 
-          {/* System Controls */}
-          <div className="bg-gradient-to-br from-slate-800/90 to-gray-800/90 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/30 shadow-2xl shadow-purple-500/10 space-y-6">
-            <h3 className="text-2xl font-bold text-purple-200 mb-6 drop-shadow-lg">System Controls</h3>
-            <div className="space-y-6">
-              <div className="bg-purple-500/10 rounded-xl p-4 border border-purple-400/20">
-                <button
-                  onClick={() => setDiversionOverride(!diversionOverride)}
-                  className="w-full font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800"
-                  style={{
-                    background: diversionOverride 
-                      ? 'linear-gradient(135deg, #7c3aed 0%, #6366f1 100%)' 
-                      : 'linear-gradient(135deg, #64748b 0%, #475569 100%)',
-                    color: '#ffffff',
-                    boxShadow: diversionOverride
-                      ? '0 4px 12px rgba(124, 58, 237, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                      : '0 4px 12px rgba(100, 116, 139, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>3D Printer:</Typography>
+                    <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{metrics.printerAllocation.toFixed(1)} kg</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Pyrolyzer:</Typography>
+                    <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{metrics.pyrolyzerAllocation.toFixed(1)} kg</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>3D Items/Day:</Typography>
+                    <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{metrics.threedPrintedItems.toFixed(1)}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 2 }}>
+                    <Typography sx={{ color: '#d1d5db', fontSize: '0.875rem' }}>Diversion Override:</Typography>
+                    <Button
+                      onClick={() => setDiversionOverride(!diversionOverride)}
+                      sx={{
+                        background: diversionOverride ? 'linear-gradient(135deg, #ef4444, #dc2626)' : 'linear-gradient(135deg, #10b981, #059669)',
+                        color: 'white',
+                        fontWeight: 600,
+                        py: 1,
+                        '&:hover': {
+                          background: diversionOverride ? 'linear-gradient(135deg, #dc2626, #b91c1c)' : 'linear-gradient(135deg, #059669, #047857)',
+                        }
+                      }}
+                    >
+                      {diversionOverride ? 'All → Pyrolyzer' : 'Normal Split'}
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            </ControlCard>
+          </Grid>
+
+          {/* NASA API Control */}
+          <Grid item xs={12} lg={4}>
+            <ControlCard sx={{ p: 3, position: 'relative', overflow: 'hidden' }}>
+              <Box sx={{ position: 'relative', zIndex: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Box sx={{
+                    width: 48,
+                    height: 48,
+                    background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                    borderRadius: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem'
+                  }}>
+                    ☀️
+                  </Box>
+                  <Box>
+                    <Typography variant="h5" sx={{ color: '#f59e0b', fontWeight: 700 }}>
+                      NASA Solar Data
+                    </Typography>
+                    <Box sx={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: 0.5,
+                      background: 'rgba(16, 185, 129, 0.2)',
+                      border: '1px solid rgba(16, 185, 129, 0.3)',
+                      borderRadius: '8px',
+                      px: 1,
+                      py: 0.25,
+                      mt: 0.5
+                    }}>
+                      <Typography sx={{ fontSize: '0.65rem', color: '#a7f3d0', fontWeight: 600 }}>
+                        🛰️ LIVE API CONNECTION
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+                
+                <Box sx={{ mb: 3 }}>
+                  <TextField
+                    label="Latitude"
+                    value={latitude}
+                    onChange={(e) => setLatitude(parseFloat(e.target.value))}
+                    type="number"
+                    fullWidth
+                    sx={{ 
+                      mb: 2,
+                      '& .MuiOutlinedInput-root': {
+                        color: 'white',
+                        '& fieldset': {
+                          borderColor: 'rgba(245, 158, 11, 0.3)',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#f59e0b',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#f59e0b',
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: '#fbbf24',
+                      },
+                    }}
+                  />
+                  <TextField
+                    label="Longitude"
+                    value={longitude}
+                    onChange={(e) => setLongitude(parseFloat(e.target.value))}
+                    type="number"
+                    fullWidth
+                    sx={{ 
+                      mb: 2,
+                      '& .MuiOutlinedInput-root': {
+                        color: 'white',
+                        '& fieldset': {
+                          borderColor: 'rgba(245, 158, 11, 0.3)',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#f59e0b',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#f59e0b',
+                        },
+                      },
+                      '& .MuiInputLabel-root': {
+                        color: '#fbbf24',
+                      },
+                    }}
+                  />
+                </Box>
+
+                <Button
+                  onClick={fetchNASAWeatherData}
+                  disabled={loading}
+                  fullWidth
+                  sx={{
+                    background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                    color: 'white',
+                    fontWeight: 600,
+                    py: 1.5,
+                    mb: 2,
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #d97706, #b45309)',
+                    }
                   }}
                 >
-                  {diversionOverride ? 'Manual Control: ON' : 'Auto Control: ON'}
-                </button>
-                <div className="flex justify-between items-center p-4 bg-slate-700/40 rounded-xl mt-4">
-                  <span className="text-purple-100 font-semibold text-lg drop-shadow">Processing Mode</span>
-                  <span className="text-purple-200 bg-purple-500/20 border border-purple-400/30 px-4 py-2 rounded-full font-bold shadow-lg">
-                    {diversionOverride ? 'Manual' : 'Auto'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+                  {loading ? '🛰️ Fetching NASA Data...' : '🛰️ Update NASA Solar Data'}
+                </Button>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Location:</Typography>
+                    <Typography sx={{ color: '#f59e0b', fontWeight: 600, fontSize: '0.875rem' }}>
+                      {latitude.toFixed(2)}°N, {longitude.toFixed(2)}°E
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Solar Irradiance:</Typography>
+                    <Typography sx={{ color: '#f59e0b', fontWeight: 600 }}>{solarIrradiance.toFixed(2)} kWh/m²</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography sx={{ color: '#d1d5db' }}>Solar Energy:</Typography>
+                      <Box sx={{ 
+                        display: 'inline-flex', 
+                        alignItems: 'center', 
+                        gap: 0.5,
+                        background: 'rgba(245, 158, 11, 0.15)',
+                        borderRadius: '6px',
+                        px: 0.75,
+                        py: 0.25
+                      }}>
+                        <Typography sx={{ fontSize: '0.6rem', color: '#fbbf24', fontWeight: 600 }}>
+                          🛰️
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography sx={{ color: '#f59e0b', fontWeight: 600 }}>{metrics.solarEnergy.toFixed(1)} kWh</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>API Status:</Typography>
+                    <Typography sx={{ color: loading ? '#f59e0b' : (weatherData ? '#10b981' : '#6b7280'), fontWeight: 600, fontSize: '0.875rem' }}>
+                      {loading ? 'Fetching...' : (weatherData ? 'Connected ✓' : 'Not Connected')}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </ControlCard>
+          </Grid>
+
+          {/* System Control */}
+          <Grid item xs={12} lg={4}>
+            <ControlCard sx={{ p: 3, position: 'relative', overflow: 'hidden' }}>
+              <Box sx={{ position: 'relative', zIndex: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+                  <Box sx={{
+                    width: 48,
+                    height: 48,
+                    background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                    borderRadius: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem'
+                  }}>
+                    ⚡
+                  </Box>
+                  <Typography variant="h5" sx={{ color: '#3b82f6', fontWeight: 700 }}>
+                    System Control
+                  </Typography>
+                </Box>
+                
+                <Box sx={{ mb: 3 }}>
+                  <Typography sx={{ color: '#a3cbf7', mb: 2 }}>Projection Days: {projectionDays}</Typography>
+                  <Slider
+                    value={projectionDays}
+                    onChange={(e, newValue) => setProjectionDays(newValue)}
+                    min={1}
+                    max={30}
+                    sx={{
+                      color: '#3b82f6',
+                      '& .MuiSlider-thumb': {
+                        backgroundColor: '#3b82f6',
+                      },
+                      '& .MuiSlider-track': {
+                        backgroundColor: '#3b82f6',
+                      },
+                      '& .MuiSlider-rail': {
+                        backgroundColor: 'rgba(59, 130, 246, 0.3)',
+                      },
+                    }}
+                  />
+                </Box>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>SOFC Energy:</Typography>
+                    <Typography sx={{ color: '#3b82f6', fontWeight: 600 }}>{(metrics.solfcEnergy * projectionDays).toFixed(1)} kWh</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Thermal Reuse:</Typography>
+                    <Typography sx={{ color: '#3b82f6', fontWeight: 600 }}>{(metrics.thermalReuse * projectionDays).toFixed(1)} kWh</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography sx={{ color: '#d1d5db' }}>Self-Sufficiency:</Typography>
+                      <Box sx={{ 
+                        display: 'inline-flex', 
+                        alignItems: 'center', 
+                        gap: 0.5,
+                        background: 'rgba(245, 158, 11, 0.15)',
+                        borderRadius: '6px',
+                        px: 0.75,
+                        py: 0.25
+                      }}>
+                        <Typography sx={{ fontSize: '0.6rem', color: '#fbbf24', fontWeight: 600 }}>
+                          🛰️
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography sx={{ color: '#3b82f6', fontWeight: 600 }}>{metrics.energySelfSufficiency.toFixed(1)}%</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 1, pt: 1, borderTop: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                    <Typography sx={{ color: '#93c5fd', fontSize: '0.875rem' }}>Period:</Typography>
+                    <Typography sx={{ color: '#93c5fd', fontSize: '0.875rem', fontWeight: 600 }}>{projectionDays} day{projectionDays > 1 ? 's' : ''}</Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </ControlCard>
+          </Grid>
+        </Grid>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-gradient-to-br from-emerald-600/90 to-teal-700/90 rounded-2xl p-6 text-white shadow-2xl shadow-emerald-500/30 border border-emerald-300/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-300/10 rounded-full -mr-10 -mt-10"></div>
-            <h4 className="text-emerald-100 font-semibold mb-2 drop-shadow">Total Energy Output</h4>
-            <p className="text-3xl font-bold drop-shadow-lg mb-1">{metrics.totalEnergy.toFixed(1)} kWh</p>
-            <p className="text-emerald-200 drop-shadow">{projectionDays} day projection</p>
-            <div className="absolute bottom-2 right-2 w-3 h-3 bg-emerald-300 rounded-full animate-pulse"></div>
-          </div>
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid item xs={12} sm={6} md={3}>
+            <MetricCard sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="h3" sx={{ 
+                color: '#10b981', 
+                fontWeight: 800, 
+                mb: 1,
+                background: 'linear-gradient(45deg, #10b981, #22c55e)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                {metrics.threedPrintedItems.toFixed(1)}
+              </Typography>
+              <Typography sx={{ color: '#d1d5db', fontWeight: 600 }}>3D Items/Day</Typography>
+              <Typography sx={{ color: '#86efac', fontSize: '0.875rem', mt: 1 }}>Utensils & Components</Typography>
+            </MetricCard>
+          </Grid>
           
-          <div className="bg-gradient-to-br from-cyan-600/90 to-blue-700/90 rounded-2xl p-6 text-white shadow-2xl shadow-cyan-500/30 border border-cyan-300/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-cyan-300/10 rounded-full -mr-10 -mt-10"></div>
-            <h4 className="text-cyan-100 font-semibold mb-2 drop-shadow">Plastic Processed</h4>
-            <p className="text-3xl font-bold drop-shadow-lg mb-1">{metrics.plasticProcessed.toFixed(1)} kg</p>
-            <p className="text-cyan-200 drop-shadow">Daily capacity</p>
-            <div className="absolute bottom-2 right-2 w-3 h-3 bg-cyan-300 rounded-full animate-pulse"></div>
-          </div>
+          <Grid item xs={12} sm={6} md={3}>
+            <MetricCard sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="h3" sx={{ 
+                color: '#f59e0b', 
+                fontWeight: 800, 
+                mb: 1,
+                background: 'linear-gradient(45deg, #f59e0b, #eab308)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                {(metrics.totalEnergyGenerated * projectionDays).toFixed(0)}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                <Typography sx={{ color: '#d1d5db', fontWeight: 600 }}>kWh Generated</Typography>
+                <Box sx={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: 0.5,
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  borderRadius: '6px',
+                  px: 0.75,
+                  py: 0.25
+                }}>
+                  <Typography sx={{ fontSize: '0.6rem', color: '#fbbf24', fontWeight: 600 }}>
+                    🛰️
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography sx={{ color: '#fbbf24', fontSize: '0.875rem', mt: 1 }}>{projectionDays} Day{projectionDays > 1 ? 's' : ''} • Solar: {(metrics.solarEnergy * projectionDays).toFixed(1)} kWh</Typography>
+            </MetricCard>
+          </Grid>
           
-          <div className="bg-gradient-to-br from-orange-600/90 to-red-700/90 rounded-2xl p-6 text-white shadow-2xl shadow-orange-500/30 border border-orange-300/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-orange-300/10 rounded-full -mr-10 -mt-10"></div>
-            <h4 className="text-orange-100 font-semibold mb-2 drop-shadow">Water Recycled</h4>
-            <p className="text-3xl font-bold drop-shadow-lg mb-1">{(metrics.waterRecycled/1000).toFixed(2)} m³</p>
-            <p className="text-orange-200 drop-shadow">{projectionDays} day total</p>
-            <div className="absolute bottom-2 right-2 w-3 h-3 bg-orange-300 rounded-full animate-pulse"></div>
-          </div>
+          <Grid item xs={12} sm={6} md={3}>
+            <MetricCard sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="h3" sx={{ 
+                color: '#3b82f6', 
+                fontWeight: 800, 
+                mb: 1,
+                background: 'linear-gradient(45deg, #3b82f6, #1d4ed8)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                {metrics.waterRecycleRate}%
+              </Typography>
+              <Typography sx={{ color: '#d1d5db', fontWeight: 600 }}>Water Reuse</Typography>
+              <Typography sx={{ color: '#93c5fd', fontSize: '0.875rem', mt: 1 }}>{metrics.waterReused.toFixed(0)}L/day</Typography>
+            </MetricCard>
+          </Grid>
           
-          <div className="bg-gradient-to-br from-purple-600/90 to-indigo-700/90 rounded-2xl p-6 text-white shadow-2xl shadow-purple-500/30 border border-purple-300/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-20 h-20 bg-purple-300/10 rounded-full -mr-10 -mt-10"></div>
-            <h4 className="text-purple-100 font-semibold mb-2 drop-shadow">Self-Sufficiency</h4>
-            <p className="text-3xl font-bold drop-shadow-lg mb-1">{metrics.energySelfSufficiency.toFixed(1)}%</p>
-            <p className="text-purple-200 drop-shadow">Energy independence</p>
-            <div className="absolute bottom-2 right-2 w-3 h-3 bg-purple-300 rounded-full animate-pulse"></div>
-          </div>
-        </div>
+          <Grid item xs={12} sm={6} md={3}>
+            <MetricCard sx={{ p: 3, textAlign: 'center' }}>
+              <Typography variant="h3" sx={{ 
+                color: '#22c55e', 
+                fontWeight: 800, 
+                mb: 1,
+                background: 'linear-gradient(45deg, #22c55e, #16a34a)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                {metrics.energySelfSufficiency.toFixed(0)}%
+              </Typography>
+              <Typography sx={{ color: '#d1d5db', fontWeight: 600 }}>Self-Sufficient</Typography>
+              <Typography sx={{ color: '#86efac', fontSize: '0.875rem', mt: 1 }}>Energy Independence</Typography>
+            </MetricCard>
+          </Grid>
+        </Grid>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Energy Breakdown */}
-          <div className="bg-gradient-to-br from-slate-700/90 to-slate-600/90 backdrop-blur-sm rounded-2xl p-8 border border-emerald-400/50 shadow-2xl shadow-emerald-500/20" style={{backgroundColor: 'rgba(51, 65, 85, 0.95)'}}>
-            <h3 className="text-2xl font-bold text-emerald-200 mb-6 drop-shadow-lg">Energy Generation Breakdown</h3>
-            <ResponsiveContainer width="100%" height={320}>
-              <PieChart>
-                <Pie
-                  data={energyBreakdown}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${value.toFixed(1)} kWh`}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  stroke="#1e293b"
-                  strokeWidth={2}
-                >
-                  {energyBreakdown.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(30, 41, 59, 0.95)', 
-                    border: '1px solid #10b981',
-                    borderRadius: '12px',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-                    color: '#e2e8f0',
-                    fontWeight: 'bold'
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+        <Grid container spacing={4}>
+          <Grid item xs={12} lg={6}>
+            <Card sx={{
+              background: 'linear-gradient(135deg, #1f2937 0%, #374151 100%)',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              borderRadius: 3,
+              p: 3
+            }}>
+              <Typography variant="h5" sx={{ color: '#3b82f6', fontWeight: 700, mb: 3 }}>
+                Energy Summary
+              </Typography>
+              
+              {/* Energy Breakdown Numbers */}
+              <Box sx={{ mb: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 12, height: 12, backgroundColor: '#10b981', borderRadius: '50%' }} />
+                    <Typography sx={{ color: '#d1d5db' }}>SOFC:</Typography>
+                  </Box>
+                  <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{(metrics.solfcEnergy * projectionDays).toFixed(1)} kWh</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 12, height: 12, backgroundColor: '#f59e0b', borderRadius: '50%' }} />
+                    <Typography sx={{ color: '#d1d5db' }}>Solar:</Typography>
+                    <Box sx={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: 0.5,
+                      background: 'rgba(245, 158, 11, 0.15)',
+                      borderRadius: '6px',
+                      px: 0.75,
+                      py: 0.25
+                    }}>
+                      <Typography sx={{ fontSize: '0.6rem', color: '#fbbf24', fontWeight: 600 }}>
+                        🛰️ NASA
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Typography sx={{ color: '#f59e0b', fontWeight: 600 }}>{(metrics.solarEnergy * projectionDays).toFixed(1)} kWh</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box sx={{ width: 12, height: 12, backgroundColor: '#8b5cf6', borderRadius: '50%' }} />
+                    <Typography sx={{ color: '#d1d5db' }}>Thermal:</Typography>
+                  </Box>
+                  <Typography sx={{ color: '#8b5cf6', fontWeight: 600 }}>{(metrics.thermalReuse * projectionDays).toFixed(1)} kWh</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 1, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                  <Typography sx={{ color: '#d1d5db', fontWeight: 600 }}>Total Generated ({projectionDays} day{projectionDays > 1 ? 's' : ''}):</Typography>
+                  <Typography sx={{ color: '#3b82f6', fontWeight: 700 }}>{(metrics.totalEnergyGenerated * projectionDays).toFixed(1)} kWh</Typography>
+                </Box>
+              </Box>
+              
+              {/* NASA Data Chart Indicator */}
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: 1,
+                background: 'rgba(245, 158, 11, 0.1)',
+                border: '1px solid rgba(245, 158, 11, 0.2)',
+                borderRadius: '8px',
+                px: 2,
+                py: 1,
+                mb: 2,
+                mt: 2
+              }}>
+                <Typography sx={{ fontSize: '0.75rem', color: '#fbbf24', fontWeight: 600 }}>
+                  🛰️ NASA API DATA
+                </Typography>
+                <Typography sx={{ fontSize: '0.75rem', color: '#fed7aa' }}>
+                  Solar energy from real-time irradiance data
+                </Typography>
+              </Box>
+              
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={energyData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="#d1d5db" />
+                  <YAxis stroke="#d1d5db" />
+                  <Tooltip 
+                    contentStyle={{
+                      backgroundColor: '#1f2937',
+                      border: '1px solid rgba(59, 130, 246, 0.3)',
+                      borderRadius: '8px',
+                      color: '#d1d5db'
+                    }}
+                  />
+                  <Bar dataKey="value" fill="#3b82f6" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Card>
+          </Grid>
 
-          {/* Sustainability Metrics */}
-          <div className="bg-gradient-to-br from-slate-700/90 to-slate-600/90 backdrop-blur-sm rounded-2xl p-8 border border-blue-400/50 shadow-2xl shadow-blue-500/20" style={{backgroundColor: 'rgba(51, 65, 85, 0.95)'}}>
-            <h3 className="text-2xl font-bold text-blue-200 mb-6 drop-shadow-lg">Sustainability Metrics</h3>
-            <ResponsiveContainer width="100%" height={320}>
-              <BarChart data={sustainabilityData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis 
-                  dataKey="metric" 
-                  tick={{ fontSize: 12, fill: '#e2e8f0', fontWeight: 'bold' }} 
-                  axisLine={{ stroke: '#6b7280' }}
-                  tickLine={{ stroke: '#6b7280' }}
-                  angle={-45}
-                  textAnchor="end"
-                  height={80}
-                />
-                <YAxis 
-                  domain={[0, 100]} 
-                  tick={{ fill: '#e2e8f0', fontWeight: 'bold' }}
-                  axisLine={{ stroke: '#6b7280' }}
-                  tickLine={{ stroke: '#6b7280' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: 'rgba(51, 65, 85, 0.98)', 
-                    border: '2px solid #3b82f6',
-                    borderRadius: '12px',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.7)',
-                    color: '#ffffff',
-                    fontWeight: 'bold'
-                  }}
-                />
-                <Bar 
-                  dataKey="percentage" 
-                  fill="url(#sustainabilityGradient)" 
-                  radius={[8, 8, 0, 0]}
-                  stroke="#3b82f6" 
-                  strokeWidth={2}
-                />
-                <defs>
-                  <linearGradient id="sustainabilityGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9}/>
-                    <stop offset="95%" stopColor="#1e40af" stopOpacity={0.7}/>
-                  </linearGradient>
-                </defs>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+          <Grid item xs={12} lg={6}>
+            <Card sx={{
+              background: 'linear-gradient(135deg, #1f2937 0%, #374151 100%)',
+              border: '1px solid rgba(16, 185, 129, 0.3)',
+              borderRadius: 3,
+              p: 3
+            }}>
+              <Typography variant="h5" sx={{ color: '#10b981', fontWeight: 700, mb: 3 }}>
+                Sustainability Analysis
+              </Typography>
+              
+              {/* Sustainability Metrics */}
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                <Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Energy Self-Sufficiency</Typography>
+                    <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{metrics.energySelfSufficiency.toFixed(1)}%</Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={Math.min(metrics.energySelfSufficiency, 100)} 
+                    sx={{
+                      backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#10b981'
+                      }
+                    }}
+                  />
+                </Box>
+                
+                <Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Water Recycling Rate</Typography>
+                    <Typography sx={{ color: '#06b6d4', fontWeight: 600 }}>{metrics.waterRecycleRate}%</Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={metrics.waterRecycleRate} 
+                    sx={{
+                      backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#06b6d4'
+                      }
+                    }}
+                  />
+                </Box>
+                
+                <Box>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography sx={{ color: '#d1d5db' }}>Waste Utilization</Typography>
+                    <Typography sx={{ color: '#f59e0b', fontWeight: 600 }}>{metrics.wasteUtilization.toFixed(1)}%</Typography>
+                  </Box>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={metrics.wasteUtilization} 
+                    sx={{
+                      backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: '#f59e0b'
+                      }
+                    }}
+                  />
+                </Box>
+                
+                <Box sx={{ mt: 2, p: 2, borderRadius: 2, background: 'rgba(16, 185, 129, 0.1)' }}>
+                  <Typography sx={{ color: '#10b981', fontWeight: 600, textAlign: 'center' }}>
+                    {projectionDays}-Day Projection: {(metrics.totalEnergyGenerated * projectionDays).toFixed(0)} kWh Total
+                  </Typography>
+                  <Typography sx={{ color: '#86efac', fontSize: '0.875rem', textAlign: 'center', mt: 1 }}>
+                    {(metrics.waterReused * projectionDays).toFixed(0)}L Water Recycled • {(metrics.co2Avoided * projectionDays).toFixed(0)} kg CO₂ Avoided
+                  </Typography>
+                </Box>
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
 
-        {/* Daily Trends */}
-        <div className="bg-gradient-to-br from-slate-700/90 to-slate-600/90 backdrop-blur-sm rounded-2xl p-8 border border-purple-400/50 shadow-2xl shadow-purple-500/20" style={{backgroundColor: 'rgba(51, 65, 85, 0.95)'}}>
-          <h3 className="text-2xl font-bold text-purple-200 mb-6 drop-shadow-lg">Daily Performance Trends</h3>
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart data={dailyTrend} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis 
-                dataKey="day" 
-                tick={{ fill: '#e2e8f0', fontWeight: 'bold' }}
-                axisLine={{ stroke: '#6b7280' }}
-                tickLine={{ stroke: '#6b7280' }}
-              />
-              <YAxis 
-                tick={{ fill: '#e2e8f0', fontWeight: 'bold' }}
-                axisLine={{ stroke: '#6b7280' }}
-                tickLine={{ stroke: '#6b7280' }}
-              />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: 'rgba(30, 41, 59, 0.95)', 
-                  border: '1px solid #8b5cf6',
-                  borderRadius: '12px',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-                  color: '#e2e8f0',
-                  fontWeight: 'bold'
-                }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="energy" 
-                stroke="#8b5cf6" 
-                strokeWidth={3} 
-                dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 5 }}
-                activeDot={{ r: 7, stroke: '#8b5cf6', strokeWidth: 2, fill: '#7c3aed' }}
-              />
-              <Line 
-                type="monotone" 
-                dataKey="efficiency" 
-                stroke="#f59e0b" 
-                strokeWidth={3} 
-                dot={{ fill: '#f59e0b', strokeWidth: 2, r: 5 }}
-                activeDot={{ r: 7, stroke: '#f59e0b', strokeWidth: 2, fill: '#d97706' }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <style>{`
-        .drop-shadow {
-          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-        
-        .drop-shadow-lg {
-          filter: drop-shadow(0 4px 8px rgba(0,0,0,0.7));
-        }
-        
-        .drop-shadow-2xl {
-          filter: drop-shadow(0 8px 16px rgba(0,0,0,0.8));
-        }
-        
-        .slider-enhanced::-webkit-slider-thumb {
-          appearance: none;
-          height: 28px;
-          width: 28px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #10b981, #059669);
-          cursor: pointer;
-          box-shadow: 0 6px 12px rgba(16, 185, 129, 0.5), 0 0 0 3px rgba(16, 185, 129, 0.2);
-          border: 3px solid rgba(255, 255, 255, 0.2);
-          transition: all 0.3s ease;
-        }
-        
-        .slider-enhanced::-webkit-slider-thumb:hover {
-          background: linear-gradient(135deg, #059669, #047857);
-          transform: scale(1.2);
-          box-shadow: 0 8px 16px rgba(16, 185, 129, 0.7), 0 0 0 4px rgba(16, 185, 129, 0.3);
-        }
-        
-        .slider-enhanced::-moz-range-thumb {
-          height: 28px;
-          width: 28px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #10b981, #059669);
-          cursor: pointer;
-          border: 3px solid rgba(255, 255, 255, 0.2);
-          box-shadow: 0 6px 12px rgba(16, 185, 129, 0.5);
-          transition: all 0.3s ease;
-        }
-        
-        .slider-enhanced::-moz-range-thumb:hover {
-          background: linear-gradient(135deg, #059669, #047857);
-          transform: scale(1.2);
-          box-shadow: 0 8px 16px rgba(16, 185, 129, 0.7);
-        }
-        
-        .slider-enhanced::-webkit-slider-track {
-          background: linear-gradient(90deg, #334155, #475569);
-          border-radius: 8px;
-          box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
-        }
-        
-        .slider-enhanced::-moz-range-track {
-          background: linear-gradient(90deg, #334155, #475569);
-          border-radius: 8px;
-          box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: rgba(51, 65, 85, 0.5);
-          border-radius: 6px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, #10b981, #059669);
-          border-radius: 6px;
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, #059669, #047857);
-        }
-        
-        /* Comprehensive text visibility fixes for DhakaDashboard */
-        * {
-          color: #ffffff !important;
-        }
-        
-        /* Ensure all headings are visible */
-        h1, h2, h3, h4, h5, h6 {
-          color: #ffffff !important;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.8) !important;
-        }
-        
-        /* Ensure all paragraphs and spans are visible */
-        p, span, div, label {
-          color: #ffffff !important;
-        }
-        
-        /* Specific color overrides for colored text classes */
-        .text-emerald-100, .text-emerald-200, .text-emerald-300 {
-          color: #a7f3d0 !important;
-        }
-        
-        .text-cyan-100, .text-cyan-200, .text-cyan-300 {
-          color: #67e8f9 !important;
-        }
-        
-        .text-purple-100, .text-purple-200, .text-purple-300 {
-          color: #c4b5fd !important;
-        }
-        
-        .text-orange-100, .text-orange-200, .text-orange-300 {
-          color: #fdba74 !important;
-        }
-        
-        /* Professional button styling */
-        button {
-          font-weight: 600 !important;
-          color: #ffffff !important;
-          border: none !important;
-          cursor: pointer !important;
-        }
-        
-        button:hover {
-          transform: translateY(-1px) !important;
-        }
-        
-        button:active {
-          transform: translateY(0) !important;
-        }
-        
-        button:disabled {
-          cursor: not-allowed !important;
-          opacity: 0.6 !important;
-        }
-        
-        /* Override any white or light backgrounds */
-        .bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100 {
-          background-color: rgba(30, 41, 59, 0.9) !important;
-        }
-        
-        /* Chart container enhancements */
-        .recharts-wrapper {
-          background: rgba(51, 65, 85, 0.5) !important;
-          border-radius: 12px !important;
-        }
-        
-        /* Chart text enhancements */
-        .recharts-text {
-          fill: #ffffff !important;
-          font-weight: 600 !important;
-        }
-        
-        .recharts-cartesian-axis-tick-value {
-          fill: #ffffff !important;
-        }
-        
-        /* Chart tooltip enhancements */
-        .recharts-tooltip-wrapper .recharts-default-tooltip {
-          background-color: rgba(51, 65, 85, 0.98) !important;
-          border: 2px solid #10b981 !important;
-          color: #ffffff !important;
-        }
-      `}</style>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

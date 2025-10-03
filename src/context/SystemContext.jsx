@@ -325,5 +325,30 @@ export function SystemProvider({ children }) {
     generated
   };
 
-  return <SystemContext.Provider value={state}>{children}</SystemContext.Provider>;
+  // Dhaka-specific state
+  const [dhakaWasteIntake, setDhakaWasteIntake] = useState(250);
+  const [dhakaProjectionDays, setDhakaProjectionDays] = useState(7);
+  const [dhakaSolarIrradiance, setDhakaSolarIrradiance] = useState(5.2);
+  const [dhakaDiversionOverride, setDhakaDiversionOverride] = useState(false);
+  const [dhakaSystemOperational, setDhakaSystemOperational] = useState(true);
+
+  const dhakaState = {
+    dhakaWasteIntake,
+    setDhakaWasteIntake,
+    dhakaProjectionDays,
+    setDhakaProjectionDays,
+    dhakaSolarIrradiance,
+    setDhakaSolarIrradiance,
+    dhakaDiversionOverride,
+    setDhakaDiversionOverride,
+    dhakaSystemOperational,
+    setDhakaSystemOperational
+  };
+
+  const fullState = {
+    ...state,
+    ...dhakaState
+  };
+
+  return <SystemContext.Provider value={fullState}>{children}</SystemContext.Provider>;
 }

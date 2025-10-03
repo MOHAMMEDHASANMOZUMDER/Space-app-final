@@ -32,15 +32,15 @@
     
             
             <div class="cta-buttons">
-                <button class="cta-btn" onclick="scrollToSection('engineering')">
+                <a class="cta-btn" href="#overview">
                     <i class="fas fa-wrench"></i> Explore the Design
-                </button>
-                <button class="cta-btn" onclick="scrollToSection('dashboards')">
+                </a>
+                <a class="cta-btn" href="#dashboards">
                     <i class="fas fa-sync-alt"></i> Explore the System
-                </button>
-                <button class="cta-btn" onclick="scrollToSection('team')">
+                </a>
+                <a class="cta-btn" href="#team">
                     <i class="fas fa-users"></i> Meet the Team
-                </button>
+                </a>
             </div>
         </div>
     </section>
@@ -64,6 +64,7 @@
                         <li><i class="fas fa-print"></i> <strong>3D-printing feedstock</strong> (plastics → filament)</li>
                         <li><i class="fas fa-cubes"></i> <strong>Structural materials</strong> (regolith composites → bricks, panels, insulation)</li>
                     </ul>
+                    <img src="full.jpg" alt="M-REGS System Diagram" class="overview-image" style="width:100%; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.2);">
                     <p class="mission-impact">
                         By reusing waste heat and recycling water & reducing usage of electricity, M-REGS directly supports 
                         NASA's mission goals: reducing habitat dependence on shipped electricity and water. 
@@ -165,9 +166,12 @@
                     <h3>Engineering Model</h3>
                     <div class="simulink-chart">
                         <!-- Simulink flowchart will be rendered here -->
-                        <div class="chart-placeholder">
-                            <i class="fas fa-code-branch"></i>
-                            <p>Simulink Model (I/O equations)</p>
+                        <div class="chart-placeholder" style="position:relative; max-height:420px; height:420px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                          <img id="mermaidThumb2" 
+                               src="Waste2Watt.png" 
+                               alt="Waste2Watt Engineering Model" 
+                               style="max-width:100%; max-height:100%; object-fit:contain; cursor:pointer; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.45); display:block;" 
+                               title="Click to enlarge" />
                         </div>
                     </div>
                 </div>
@@ -389,7 +393,7 @@
                 <div class="subsystem">
                     <div class="subsystem-visual">
                         <div class="cad-render">
-                            <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203607&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203607'>Download</a>
+                           <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203608&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203608'>Download</a> 
                         </div>
                     </div>
                     <div class="subsystem-content">
@@ -611,8 +615,7 @@
                 <div class="subsystem">
                     <div class="subsystem-visual">
                         <div class="cad-render">
-                            <i class="fas fa-industry"></i>
-                            <p>Arc Furnace 3D CAD</p>
+                           <iframe scrolling='no' frameborder='0' allowfullscreen='true' src='https://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=3203607&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'></iframe><br/><a href='https://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=3203607'>Download</a>
                         </div>
                     </div>
                     <div class="subsystem-content">
@@ -784,116 +787,170 @@
     </section>
 
     <!-- Animation Section -->
-    <section id="animation" class="animation-section">
-        <div class="container">
-            <h2 class="section-title">System Animation</h2>
-            <div class="animation-intro">
-                <p>
-                    To make M-REGS accessible to non-engineers, we built animated models:
-                </p>
-            </div>
-            
-            <div class="animation-content">
-                <div class="animation-item">
-                    <div class="animation-visual">
-                        <i class="fas fa-bolt"></i>
-                        <h3>ReactFlow Particle Animation</h3>
-                        <p>Real-time flow of waste streams → outputs</p>
-                    </div>
-                </div>
-                
-                <div class="animation-item">
-                    <div class="animation-visual">
-                        <i class="fas fa-film"></i>
-                        <h3>Narrative Video</h3>
-                        <p>1–2 min showing: 'Trash in → Utility out.'</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
+   
     <!-- Bangladesh Design & Earth Application -->
     <section id="earth-application" class="earth-section">
         <div class="container">
-            <h2 class="section-title">Bangladesh Design & Earth Application</h2>
-            <div class="earth-intro">
-                <p>
-                    Beyond Mars, M-REGS addresses Earth's most urgent issue: plastic waste.
-                    We propose a miniaturized Dhaka model focused only on plastics → electricity + tools.
+            <h2 class="section-title" style="background: linear-gradient(135deg, #10b981, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; margin-bottom: 30px; font-size: 2.5rem; font-weight: 700;">
+                <i class="fas fa-globe-asia" style="color: #10b981; margin-right: 15px;"></i>
+                Bangladesh Design & Earth Application
+            </h2>
+            <div class="earth-intro" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.05)); padding: 30px; border-radius: 16px; margin-bottom: 40px; border: 1px solid rgba(16, 185, 129, 0.2); box-shadow: 0 10px 40px rgba(16, 185, 129, 0.1);">
+                <p style="font-size: 1.2rem; line-height: 1.8; color: #e2e8f0; text-align: center; margin: 0; font-weight: 400;">
+                    <span style="color: #34d399; font-weight: 600;">Beyond Mars</span>, M-REGS addresses Earth's most urgent issue: plastic waste.
+                    We propose a miniaturized <span style="color: #10b981; font-weight: 600;">Dhaka model</span> focused only on plastics → electricity + tools.
                     Powered by solar panels (NASA weather API for sunlight data), this machine could help 
-                    urban areas turn waste into power, tools, and resilience.
+                    urban areas turn waste into <span style="color: #fbbf24; font-weight: 600;">power, tools, and resilience</span>.
                 </p>
             </div>
             
             <div class="comparison-graphic">
-                <div class="version-comparison" style="display: flex; flex-direction: column; gap: 40px;">
+                <div class="version-comparison" style="display: flex; flex-direction: column; gap: 50px; padding: 20px;">
+                    
                     <!-- Mars/Bangladesh System Section -->
-                    <div class="mars-version" style="width: 100%; max-width: 1200px; margin: 0 auto;">
-                        <div class="version-header" style="text-align: center; margin-bottom: 20px;">
-                            <h3 style="color: #63b3ed; margin-bottom: 12px;"><i class="fas fa-rocket"></i> Mars M-REGS System Architecture</h3>
-                        </div>
-                        <div class="version-features" style="background: linear-gradient(135deg, #1a1f2e, #2d3748); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                            <p style="color: #e2e8f0; margin-bottom: 15px;">Complete M-REGS flowchart showing the full multi-stream recycling system</p>
-                            <ul style="color: #a0aec0; margin: 0; padding-left: 20px;">
-                                <li>Multi-stream recycling (plastics, metals, organics)</li>
-                                <li>Regolith processing for construction materials</li>
-                                <li>Thermal integration with heat recovery loops</li>
-                                <li>Life support integration for habitat systems</li>
-                                <li>SOFC fuel cell electricity generation</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="dashboard-embedded mars-flowchart">
-                            <div class="dashboard-header" style="text-align: center; margin-bottom: 15px;">
-                                <h4 style="color: #e2e8f0; margin-bottom: 8px;"><i class="fas fa-project-diagram"></i> Interactive System Flowchart</h4>
-                                <p style="color: #a0aec0; margin: 0;">Comprehensive system architecture for Mars deployment with full waste processing capabilities</p>
+                    <div class="mars-version" style="width: 100%; max-width: 1200px; margin: 0 auto; position: relative;">
+                        <div class="version-card" style="background: linear-gradient(135deg, #1e3a8a, #3730a3, #1e40af); border-radius: 20px; padding: 0; overflow: hidden; box-shadow: 0 20px 60px rgba(30, 58, 138, 0.3); border: 1px solid rgba(59, 130, 246, 0.3); transition: all 0.4s ease; position: relative;">
+                            <div class="card-glow" style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #3b82f6); border-radius: 22px; z-index: -1; opacity: 0; transition: opacity 0.4s ease;"></div>
+                            
+                            <div class="version-header" style="text-align: center; padding: 30px 30px 0; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05)); position: relative;">
+                                <div style="position: absolute; top: 15px; right: 20px; background: rgba(59, 130, 246, 0.2); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                                    <span style="color: #93c5fd; font-size: 0.9rem; font-weight: 600;">🚀 MARS READY</span>
+                                </div>
+                                <h3 style="color: #93c5fd; margin-bottom: 15px; font-size: 1.8rem; font-weight: 700; text-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);">
+                                    <i class="fas fa-rocket" style="margin-right: 12px; color: #60a5fa;"></i>
+                                    Mars M-REGS System Architecture
+                                </h3>
+                                <div class="feature-badges" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px;">
+                                    <span style="background: rgba(59, 130, 246, 0.2); color: #93c5fd; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(59, 130, 246, 0.3);">Multi-Stream Processing</span>
+                                    <span style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(139, 92, 246, 0.3);">SOFC Generation</span>
+                                    <span style="background: rgba(6, 182, 212, 0.2); color: #67e8f9; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(6, 182, 212, 0.3);">Heat Recovery</span>
+                                </div>
                             </div>
                             
-                            <div class="dashboard-iframe-container">
-                                <iframe src="https://space-app-final-o69x.vercel.app/#/dhakaflowchart" 
-                                        style="width: 100%; height: 900px; border: none; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);"
-                                        title="Mars M-REGS System Architecture Flowchart"
-                                        allowfullscreen
-                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
-                                        loading="lazy"
-                                        referrerpolicy="no-referrer-when-downgrade">
-                                </iframe>
+                            <div class="version-features" style="padding: 25px 30px; background: linear-gradient(135deg, rgba(30, 58, 138, 0.4), rgba(55, 48, 163, 0.3));">
+                                <p style="color: #e2e8f0; margin-bottom: 20px; font-size: 1.1rem; line-height: 1.7; text-align: center; font-weight: 400;">
+                                    Complete M-REGS flowchart showing the <span style="color: #93c5fd; font-weight: 600;">full multi-stream</span> recycling system
+                                </p>
+                                <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px;">
+                                    <div style="background: rgba(59, 130, 246, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                        <i class="fas fa-recycle" style="color: #60a5fa; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Multi-stream recycling (plastics, metals, organics)</span>
+                                    </div>
+                                    <div style="background: rgba(139, 92, 246, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                                        <i class="fas fa-mountain" style="color: #a78bfa; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Regolith processing for construction materials</span>
+                                    </div>
+                                    <div style="background: rgba(6, 182, 212, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2);">
+                                        <i class="fas fa-thermometer-half" style="color: #22d3ee; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Thermal integration with heat recovery loops</span>
+                                    </div>
+                                    <div style="background: rgba(16, 185, 129, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                        <i class="fas fa-home" style="color: #34d399; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Life support integration for habitat systems</span>
+                                    </div>
+                                    <div style="background: rgba(245, 158, 11, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                        <i class="fas fa-bolt" style="color: #fbbf24; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">SOFC fuel cell electricity generation</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="dashboard-embedded mars-flowchart" style="padding: 30px; background: linear-gradient(135deg, rgba(30, 58, 138, 0.2), rgba(55, 48, 163, 0.1));">
+                                <div class="dashboard-header" style="text-align: center; margin-bottom: 25px; padding: 20px; background: rgba(59, 130, 246, 0.1); border-radius: 16px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                                    <h4 style="color: #93c5fd; margin-bottom: 10px; font-size: 1.4rem; font-weight: 600;">
+                                        <i class="fas fa-project-diagram" style="margin-right: 12px; color: #60a5fa;"></i>
+                                        Interactive System Flowchart
+                                    </h4>
+                                    <p style="color: #cbd5e1; margin: 0; font-size: 1rem; line-height: 1.6;">
+                                        Comprehensive system architecture for Mars deployment with full waste processing capabilities
+                                    </p>
+                                </div>
+                                
+                                <div class="dashboard-iframe-container" style="position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 50px rgba(30, 58, 138, 0.4); border: 2px solid rgba(59, 130, 246, 0.3); transition: all 0.4s ease;">
+                                    <iframe src="https://space-app-final-o69x.vercel.app/#/dhakaflowchart" 
+                                            style="width: 100%; height: 900px; border: none; background: linear-gradient(135deg, #0f172a, #1e293b);"
+                                            title="Mars M-REGS System Architecture Flowchart"
+                                            allowfullscreen
+                                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+                                            loading="lazy"
+                                            referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                    <div class="iframe-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.05), transparent); opacity: 0; transition: opacity 0.4s ease;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Earth/Dhaka System Section -->
-                    <div class="earth-version" style="width: 100%; max-width: 1200px; margin: 0 auto;">
-                        <div class="version-header" style="text-align: center; margin-bottom: 20px;">
-                            <h3 style="color: #68d391; margin-bottom: 12px;"><i class="fas fa-globe"></i> Dhaka Urban Application</h3>
-                        </div>
-                        <div class="version-features" style="background: linear-gradient(135deg, #1a2f1a, #2d4a2d); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                            <p style="color: #e2e8f0; margin-bottom: 15px;">Simplified plastic-focused system adapted for urban deployment in Dhaka, Bangladesh</p>
-                            <ul style="color: #a0aec0; margin: 0; padding-left: 20px;">
-                                <li>Plastic-only processing for urban waste streams</li>
-                                <li>Solar power integration with weather data</li>
-                                <li>Urban deployment ready for city infrastructure</li>
-                                <li>Community resilience focus for developing nations</li>
-                                <li>Real-time monitoring and control systems</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="dashboard-embedded dhaka-dashboard">
-                            <div class="dashboard-header" style="text-align: center; margin-bottom: 15px;">
-                                <h4 style="color: #e2e8f0; margin-bottom: 8px;"><i class="fas fa-chart-area"></i> Interactive Dhaka System Dashboard</h4>
-                                <p style="color: #a0aec0; margin: 0;">Real-time monitoring of plastic waste processing with solar integration and urban metrics</p>
+                    <div class="earth-version" style="width: 100%; max-width: 1200px; margin: 0 auto; position: relative;">
+                        <div class="version-card" style="background: linear-gradient(135deg, #064e3b, #065f46, #047857); border-radius: 20px; padding: 0; overflow: hidden; box-shadow: 0 20px 60px rgba(6, 78, 59, 0.4); border: 1px solid rgba(16, 185, 129, 0.3); transition: all 0.4s ease; position: relative;">
+                            <div class="card-glow" style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #10b981, #34d399, #06b6d4, #10b981); border-radius: 22px; z-index: -1; opacity: 0; transition: opacity 0.4s ease;"></div>
+                            
+                            <div class="version-header" style="text-align: center; padding: 30px 30px 0; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.05)); position: relative;">
+                                <div style="position: absolute; top: 15px; right: 20px; background: rgba(16, 185, 129, 0.2); padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                                    <span style="color: #6ee7b7; font-size: 0.9rem; font-weight: 600;">🌍 EARTH READY</span>
+                                </div>
+                                <h3 style="color: #6ee7b7; margin-bottom: 15px; font-size: 1.8rem; font-weight: 700; text-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);">
+                                    <i class="fas fa-globe" style="margin-right: 12px; color: #34d399;"></i>
+                                    Dhaka Urban Application
+                                </h3>
+                                <div class="feature-badges" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px;">
+                                    <span style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(16, 185, 129, 0.3);">Plastic Processing</span>
+                                    <span style="background: rgba(245, 158, 11, 0.2); color: #fcd34d; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(245, 158, 11, 0.3);">Solar Powered</span>
+                                    <span style="background: rgba(6, 182, 212, 0.2); color: #67e8f9; padding: 6px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(6, 182, 212, 0.3);">Urban Ready</span>
+                                </div>
                             </div>
                             
-                            <div class="dashboard-iframe-container">
-                                <iframe src="https://space-app-final-o69x.vercel.app/#/dhakadashboard" 
-                                        style="width: 100%; height: 900px; border: none; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);"
-                                        title="Dhaka Urban Waste2Watt Dashboard"
-                                        allowfullscreen
-                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
-                                        loading="lazy"
-                                        referrerpolicy="no-referrer-when-downgrade">
-                                </iframe>
+                            <div class="version-features" style="padding: 25px 30px; background: linear-gradient(135deg, rgba(6, 78, 59, 0.4), rgba(6, 95, 70, 0.3));">
+                                <p style="color: #e2e8f0; margin-bottom: 20px; font-size: 1.1rem; line-height: 1.7; text-align: center; font-weight: 400;">
+                                    Simplified <span style="color: #6ee7b7; font-weight: 600;">plastic-focused system</span> adapted for urban deployment in Dhaka, Bangladesh
+                                </p>
+                                <div class="features-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 20px;">
+                                    <div style="background: rgba(16, 185, 129, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                        <i class="fas fa-recycle" style="color: #34d399; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Plastic-only processing for urban waste streams</span>
+                                    </div>
+                                    <div style="background: rgba(245, 158, 11, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                        <i class="fas fa-solar-panel" style="color: #fbbf24; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Solar power integration with weather data</span>
+                                    </div>
+                                    <div style="background: rgba(6, 182, 212, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.2);">
+                                        <i class="fas fa-city" style="color: #22d3ee; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Urban deployment ready for city infrastructure</span>
+                                    </div>
+                                    <div style="background: rgba(139, 92, 246, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.2);">
+                                        <i class="fas fa-users" style="color: #a78bfa; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Community resilience focus for developing nations</span>
+                                    </div>
+                                    <div style="background: rgba(239, 68, 68, 0.1); padding: 16px; border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                        <i class="fas fa-chart-line" style="color: #f87171; margin-right: 10px; font-size: 1.1rem;"></i>
+                                        <span style="color: #e2e8f0; font-weight: 500;">Real-time monitoring and control systems</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="dashboard-embedded dhaka-dashboard" style="padding: 30px; background: linear-gradient(135deg, rgba(6, 78, 59, 0.2), rgba(6, 95, 70, 0.1));">
+                                <div class="dashboard-header" style="text-align: center; margin-bottom: 25px; padding: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 16px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                    <h4 style="color: #6ee7b7; margin-bottom: 10px; font-size: 1.4rem; font-weight: 600;">
+                                        <i class="fas fa-chart-area" style="margin-right: 12px; color: #34d399;"></i>
+                                        Interactive Dhaka System Dashboard
+                                    </h4>
+                                    <p style="color: #cbd5e1; margin: 0; font-size: 1rem; line-height: 1.6;">
+                                        Real-time monitoring of plastic waste processing with solar integration and urban metrics
+                                    </p>
+                                </div>
+                                
+                                <div class="dashboard-iframe-container" style="position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 50px rgba(6, 78, 59, 0.4); border: 2px solid rgba(16, 185, 129, 0.3); transition: all 0.4s ease;">
+                                    <iframe src="https://space-app-final-o69x.vercel.app/#/dhakadashboard" 
+                                            style="width: 100%; height: 900px; border: none; background: linear-gradient(135deg, #0f172a, #1e293b);"
+                                            title="Dhaka Urban Waste2Watt Dashboard"
+                                            allowfullscreen
+                                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+                                            loading="lazy"
+                                            referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
+                                    <div class="iframe-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.05), transparent); opacity: 0; transition: opacity 0.4s ease;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -950,6 +1007,180 @@
         });
     </script>
 
+    <!-- Enhanced Styling for Dhaka Dashboard and Flowchart -->
+    <style>
+        /* Dhaka Dashboard Enhanced Styles */
+        .earth-section {
+            background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .earth-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        /* Card Hover Effects */
+        .version-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 80px rgba(16, 185, 129, 0.3);
+        }
+        
+        .mars-version .version-card:hover {
+            box-shadow: 0 30px 80px rgba(59, 130, 246, 0.4);
+        }
+        
+        .mars-version .version-card:hover .card-glow {
+            opacity: 0.6;
+        }
+        
+        .earth-version .version-card:hover .card-glow {
+            opacity: 0.6;
+        }
+        
+        /* Dashboard iframe hover effects */
+        .dashboard-iframe-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.5);
+        }
+        
+        .mars-flowchart .dashboard-iframe-container:hover {
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.5);
+        }
+        
+        .dashboard-iframe-container:hover .iframe-overlay {
+            opacity: 1;
+        }
+        
+        /* Feature badges hover effects */
+        .feature-badges span {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .feature-badges span:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Features grid hover effects */
+        .features-grid > div {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .features-grid > div:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Dashboard header hover effects */
+        .dashboard-header {
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Responsive enhancements */
+        @media (max-width: 768px) {
+            .version-comparison {
+                gap: 30px !important;
+                padding: 10px !important;
+            }
+            
+            .version-header h3 {
+                font-size: 1.5rem !important;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .feature-badges {
+                justify-content: center !important;
+            }
+            
+            .dashboard-iframe-container iframe {
+                height: 600px !important;
+            }
+        }
+        
+        /* Loading animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .version-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .earth-version .version-card {
+            animation-delay: 0.2s;
+        }
+        
+        /* Glowing border animation */
+        @keyframes borderGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+            }
+        }
+        
+        .earth-version .version-card {
+            animation: fadeInUp 0.8s ease-out, borderGlow 3s ease-in-out infinite;
+        }
+        
+        .mars-version .version-card {
+            animation: fadeInUp 0.8s ease-out, borderGlow 3s ease-in-out infinite;
+        }
+        
+        @keyframes marsBorderGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+            }
+        }
+        
+        .mars-version .version-card {
+            animation: fadeInUp 0.8s ease-out, marsBorderGlow 3s ease-in-out infinite;
+        }
+        
+        /* Pulse effect for important elements */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .dashboard-header h4 {
+            animation: pulse 2s ease-in-out infinite;
+        }
+    </style>
+    
     <!-- Image modal for mermaid.png (enhanced) -->
     <style>
         /* Modal overlay */
@@ -1010,7 +1241,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
         @media (max-width: 640px){
-            #mermaidThumb{ max-height:280px }
+            #mermaidThumb, #mermaidThumb2{ max-height:280px }
             #imageModalInner{ width: 98vw; height: 98vh }
         }
     </style>
@@ -1032,17 +1263,26 @@
     <script>
         (function(){
             const thumb = document.getElementById('mermaidThumb');
+            const thumb2 = document.getElementById('mermaidThumb2');
             const modal = document.getElementById('imageModalEnhanced');
             const inner = document.getElementById('imageModalInner');
             const closeBtn = document.getElementById('imageModalCloseEnhanced');
             const fullImg = document.getElementById('mermaidFullEnhanced');
 
-            if(!thumb || !modal) return;
+            if(!modal) return;
 
-            function openModal(){
-                fullImg.src = thumb.src; // allow separate hi-res path later
+            function openModal(clickedThumb){
+                if(clickedThumb) {
+                    fullImg.src = clickedThumb.src;
+                    fullImg.alt = clickedThumb.alt;
+                }
                 modal.classList.add('show');
                 document.body.style.overflow = 'hidden';
+                // Reset zoom and pan for new image
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateTransform();
                 // force reflow for animation
                 void fullImg.offsetWidth;
             }
@@ -1052,7 +1292,13 @@
                 document.body.style.overflow = '';
             }
 
-            thumb.addEventListener('click', openModal);
+            // Add click listeners for both thumbnails
+            if(thumb) {
+                thumb.addEventListener('click', () => openModal(thumb));
+            }
+            if(thumb2) {
+                thumb2.addEventListener('click', () => openModal(thumb2));
+            }
             closeBtn.addEventListener('click', closeModal);
 
             // Pan/zoom implementation
