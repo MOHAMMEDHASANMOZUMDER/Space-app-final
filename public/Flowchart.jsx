@@ -247,27 +247,68 @@ const CustomNode = ({ data }) => {
           </div>
           
           <div style={{ borderRadius: 12, overflow: 'hidden', background: 'linear-gradient(180deg, #071028, #021221)' }}>
-            <Canvas 
-              style={{ width: '100%', height: '180px' }}
-              camera={{ position: [2, 1.5, 2], fov: 45 }}
-            >
-              <ambientLight intensity={0.6} />
-              <directionalLight position={[5, 5, 5]} intensity={0.9} />
-              <directionalLight position={[-5, -5, -5]} intensity={0.3} />
-              <Suspense fallback={null}>
-                {data.modelPath ? (
-                  <GLTFModel path={data.modelPath} scale={data.modelScale || 1} />
-                ) : (
-                  getFallbackComponent(data.id)
-                )}
-              </Suspense>
-              <OrbitControls 
-                enableZoom={false} 
-                autoRotate 
-                autoRotateSpeed={2}
-                enablePan={false}
-              />
-            </Canvas>
+            {/* Special handling for components with CAD images */}
+            {data.cadImages ? (
+              <div style={{ 
+                width: '100%', 
+                height: '180px', 
+                display: 'flex', 
+                gap: '8px', 
+                padding: '8px',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                {data.cadImages.map((imagePath, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      flex: 1,
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '8px',
+                      border: '1px solid rgba(255, 107, 53, 0.3)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    <img
+                      src={imagePath}
+                      alt={`${data.label} CAD View ${index + 1}`}
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        objectFit: 'contain',
+                        borderRadius: '6px'
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <Canvas 
+                style={{ width: '100%', height: '180px' }}
+                camera={{ position: [2, 1.5, 2], fov: 45 }}
+              >
+                <ambientLight intensity={0.6} />
+                <directionalLight position={[5, 5, 5]} intensity={0.9} />
+                <directionalLight position={[-5, -5, -5]} intensity={0.3} />
+                <Suspense fallback={null}>
+                  {data.modelPath ? (
+                    <GLTFModel path={data.modelPath} scale={data.modelScale || 1} />
+                  ) : (
+                    getFallbackComponent(data.id)
+                  )}
+                </Suspense>
+                <OrbitControls 
+                  enableZoom={false} 
+                  autoRotate 
+                  autoRotateSpeed={2}
+                  enablePan={false}
+                />
+              </Canvas>
+            )}
           </div>
         </motion.div>
         )}
@@ -292,7 +333,7 @@ const initialNodes = [
   // ML Pre-sort
   { id: "mlsort", type: "custom", position: { x: -600, y: 200 }, data: { id: "mlsort", label: "ML Pre-sort", icon: "🤖", specs: "• Power: 5–10 kW (AI vision + conveyors)\n• Weight: ~400 kg\n• Dimensions: 2×2×2 m\n• Key: Classifies materials with >95% accuracy", significance: "AI-powered automated sorting system for all input waste streams.", color: "#fbbf24" } },
   // Shredder
-  { id: "shredder", type: "custom", position: { x: -400, y: 200 }, data: { id: "shredder", label: "Shredder", icon: "🔪", specs: "• Power: 20–30 kW\n• Weight: ~800 kg\n• Dimensions: 2.5×2×2.5 m\n• Key: Reduces feed to <10 mm flakes", significance: "Size reduction for plastics, fabrics, and organic materials.", color: "#64748b" } },
+  { id: "shredder", type: "custom", position: { x: -400, y: 200 }, data: { id: "shredder", label: "Shredder", icon: "🔪", specs: "• Power: 20–30 kW\n• Weight: ~800 kg\n• Dimensions: 2.5×2×2.5 m\n• Key: Reduces feed to <10 mm flakes", significance: "Size reduction for plastics, fabrics, and organic materials.", color: "#64748b", cadImages: ["/2.jpg"] } },
   // 3D Printing Path
   { id: "washer", type: "custom", position: { x: -200, y: 100 }, data: { id: "washer", label: "Washer Tank", icon: "💧", specs: "• Power: 3–5 kW for pumps & agitators\n• Weight: ~500 kg (empty)\n• Dimensions: 3×2×2 m\n• Key: Heated washing, chemical additives possible", significance: "Cleans shredded plastics before processing.", color: "#06b6d4" } },
   { id: "greytank", type: "custom", position: { x: 0, y: 100 }, data: { id: "greytank", label: "Greywater Tank", icon: "🪣", specs: "• Power: Passive, sensors <1 kW\n• Weight: ~200 kg empty\n• Dimensions: 2×2×2 m\n• Key: Collects wash effluent for reuse", significance: "Stores contaminated water for treatment and recycling.", color: "#06b6d4" } },
@@ -303,14 +344,14 @@ const initialNodes = [
   { id: "printer", type: "custom", position: { x: 200, y: 200 }, data: { id: "printer", label: "3D Printer / Storage", icon: "🖨", specs: "• Power: 3–6 kW per unit\n• Weight: ~300 kg per printer\n• Dimensions: 1.5×1.5×2 m\n• Key: High-resolution prints, large storage racks", significance: "Produces tools, spare parts, and equipment from filament.", color: "#ec4899" } },
   // Pyrolysis Path
   { id: "pyro", type: "custom", position: { x: 400, y: 300 }, data: { id: "pyro", label: "Pyrolyzer", icon: "🔥", specs: "• Power: 30–50 kW thermal input\n• Weight: ~1.2 tons\n• Dimensions: 3×2×2.5 m\n• Key: Operates at 400–600 °C, produces syngas + char", significance: "Thermal decomposition of organic waste into useful products.", color: "#ef4444" } },
-  { id: "cyclone", type: "custom", position: { x: 600, y: 300 }, data: { id: "cyclone", label: "Cyclone Separator", icon: "🌀", specs: "• Power: 2 kW (fans)\n• Weight: ~400 kg\n• Dimensions: 2×1.5×2 m\n• Key: Separates particulates from gas stream", significance: "Removes solid particles from hot pyrolysis gas.", color: "#fbbf24" } },
+  { id: "cyclone", type: "custom", position: { x: 600, y: 300 }, data: { id: "cyclone", label: "Cyclone Separator", icon: "🌀", specs: "• Power: 2 kW (fans)\n• Weight: ~400 kg\n• Dimensions: 2×1.5×2 m\n• Key: Separates particulates from gas stream", significance: "Removes solid particles from hot pyrolysis gas.", color: "#fbbf24", cadImages: ["/22.jpg"] } },
   { id: "char", type: "custom", position: { x: 800, y: 300 }, data: { id: "char", label: "Char Collector", icon: "🟫", specs: "• Power: Passive\n• Weight: ~200 kg\n• Dimensions: 1.5×1×1.5 m\n• Key: Stores solid carbon for reuse or fuel", significance: "Collects solid carbon char for building materials.", color: "#f97316" } },
   { id: "condenser", type: "custom", position: { x: 400, y: 400 }, data: { id: "condenser", label: "Condenser", icon: "❄️", specs: "• Power: 4–6 kW (coolant pumps)\n• Weight: ~600 kg\n• Dimensions: 2.5×1.5×2 m\n• Key: Condenses oils/tars from syngas", significance: "Condenses and separates liquid oils from gas stream.", color: "#06b6d4" } },
   { id: "oilsump", type: "custom", position: { x: 600, y: 400 }, data: { id: "oilsump", label: "Oil Sump", icon: "🛢", specs: "• Power: Passive\n• Weight: ~200 kg\n• Dimensions: 1×1×1.5 m\n• Key: Collects condensed oils", significance: "Initial collection point for pyrolysis oils.", color: "#fbbf24" } },
   { id: "oiltank", type: "custom", position: { x: 800, y: 400 }, data: { id: "oiltank", label: "Heated Oil Tank", icon: "🔥", specs: "• Power: 2–4 kW (maintains fluidity at 60–100 °C)\n• Weight: ~300 kg\n• Dimensions: 1.5×1.5×2 m\n• Key: Stores pyrolysis oils safely", significance: "Temperature-controlled storage for pyrolysis oils.", color: "#ef4444" } },
   { id: "oilpolish", type: "custom", position: { x: 1000, y: 400 }, data: { id: "oilpolish", label: "Polishing Filter", icon: "🧽", specs: "• Power: <2 kW\n• Weight: ~150 kg\n• Dimensions: 1.2×1×1.2 m\n• Key: Removes fine impurities from oils", significance: "Final purification of oils for composite binders.", color: "#06b6d4" } },
   { id: "gasclean", type: "custom", position: { x: 400, y: 500 }, data: { id: "gasclean", label: "Gas Cleanup + Cracker", icon: "🧪", specs: "• Power: 10–20 kW\n• Weight: ~800 kg\n• Dimensions: 3×2×2 m\n• Key: Reforms tars into H₂, CO, CH₄-rich syngas", significance: "Conditions syngas for optimal fuel cell performance.", color: "#7c3aed" } },
-  { id: "sofc", type: "custom", position: { x: 600, y: 500 }, data: { id: "sofc", label: "SOFC Generator", icon: "⚡", specs: "• Power Output: 10–30 kW (electrical)\n• Power Input: Syngas, ~80% efficient\n• Weight: ~1 ton\n• Dimensions: 3×2×2.5 m\n• Key: Produces electricity + heat (600–1000 °C exhaust)", significance: "High-efficiency conversion of syngas to electricity.", color: "#7c3aed" } },
+  { id: "sofc", type: "custom", position: { x: 600, y: 500 }, data: { id: "sofc", label: "SOFC Generator", icon: "⚡", specs: "• Power Output: 10–30 kW (electrical)\n• Power Input: Syngas, ~80% efficient\n• Weight: ~1 ton\n• Dimensions: 3×2×2.5 m\n• Key: Produces electricity + heat (600–1000 °C exhaust)", significance: "High-efficiency conversion of syngas to electricity.", color: "#7c3aed", cadImages: ["/1.jpg", "/12.jpg"] } },
   { id: "pyroheat", type: "custom", position: { x: 800, y: 500 }, data: { id: "pyroheat", label: "Pyro Heat Exchanger", icon: "♨", specs: "• Power: Transfers ~15–20 kW thermal\n• Weight: ~300 kg\n• Dimensions: 2×1.5×2 m\n• Key: Reuses pyrolysis heat to preheat feedstock", significance: "Heat recovery system for improved energy efficiency.", color: "#f59e0b" } },
   // Arc Furnace Path
   { id: "arc", type: "custom", position: { x: 400, y: 600 }, data: { id: "arc", label: "Arc Furnace", icon: "⚡", specs: "• Power: 100–200 kW\n• Weight: ~10 tons\n• Dimensions: 5×4×5 m\n• Key: Melts metals & glass, up to 2000 °C", significance: "High-temperature processing of metals and glass waste.", color: "#2563eb" } },

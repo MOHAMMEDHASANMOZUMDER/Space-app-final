@@ -1,5 +1,5 @@
 import React from 'react';
-import Flowchart from './components/Flowchart';
+import Flowchart from '../public/Flowchart';
 
 export default function FlowchartRoute() {
   return (

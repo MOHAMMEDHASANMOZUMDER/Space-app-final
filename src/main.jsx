@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
 import './index.css'
 import App from './App.jsx'
-import Flowchart from './components/Flowchart.jsx'
+import Flowchart from '../public/Flowchart.jsx'
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', function() {
@@ -40,8 +40,17 @@ document.addEventListener('DOMContentLoaded', function() {
   const rootContainer = document.getElementById('root');
   if (rootContainer && !dashboardContainer && !flowchartContainer) {
     // Only mount to root if we're not in the integrated page
-    const isFlowchartRoute = window.location.hash === '#flowchart' || 
+    const isFlowchartRoute = window.location.pathname === '/flowchart' || 
+                           window.location.pathname.includes('flowchart') ||
+                           window.location.hash === '#flowchart' || 
                            window.location.search.includes('flowchart');
+    
+    console.log('Route detection:', {
+      pathname: window.location.pathname,
+      hash: window.location.hash,
+      search: window.location.search,
+      isFlowchartRoute
+    });
     
     const AppToRender = isFlowchartRoute ? (
       <div style={{ 

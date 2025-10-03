@@ -5,10 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    historyApiFallback: {
-      rewrites: [
-        { from: /^\/flowchart$/, to: '/index.html' }
-      ]
-    }
+    historyApiFallback: true
   }
 })

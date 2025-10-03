@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import Flowchart from './components/Flowchart';
+import Flowchart from '../public/Flowchart';
 import './index.css';
 
 // Create a standalone flowchart app for embedding
