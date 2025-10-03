@@ -1,0 +1,413 @@
+/* Visibility enhancement styles for dark theme */
+@layer base, components, utilities, overrides;
+
+@layer overrides {
+  /* CSS Custom Properties for consistent text colors */
+  :root {
+    --text-primary: #ffffff;
+    --text-secondary: #e2e8f0;
+    --text-accent: #10b981;
+  }
+
+  /* Ultimate text visibility override */
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video, text, tspan {
+    color: var(--text-primary) !important;
+    fill: var(--text-primary) !important;
+  }
+}
+
+/* Force bright text colors for better visibility */
+.text-bright {
+  color: #e2e8f0 !important;
+}
+
+.text-bright-emerald {
+  color: #a7f3d0 !important;
+}
+
+.text-bright-cyan {
+  color: #67e8f9 !important;
+}
+
+.text-bright-blue {
+  color: #93c5fd !important;
+}
+
+.text-bright-purple {
+  color: #c4b5fd !important;
+}
+
+.text-bright-orange {
+  color: #fdba74 !important;
+}
+
+/* Force bright backgrounds for contrast */
+.bg-dark-slate {
+  background: rgba(30, 41, 59, 0.95) !important;
+}
+
+.bg-dark-gradient {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95)) !important;
+}
+
+/* Enhanced shadows for better depth */
+.shadow-bright {
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.2), 0 8px 25px 0 rgba(16, 185, 129, 0.1) !important;
+}
+
+.shadow-bright-cyan {
+  box-shadow: 0 4px 14px 0 rgba(6, 182, 212, 0.2), 0 8px 25px 0 rgba(6, 182, 212, 0.1) !important;
+}
+
+/* Force visible borders */
+.border-bright {
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+.border-bright-cyan {
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+}
+
+/* Chart text visibility enhancements */
+.recharts-text {
+  fill: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: rgba(30, 41, 59, 0.98) !important;
+  border: 1px solid #10b981 !important;
+  border-radius: 12px !important;
+  color: #e2e8f0 !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.7) !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+.recharts-cartesian-grid line {
+  stroke: #374151 !important;
+}
+
+/* MUI component visibility fixes */
+.MuiTab-root {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600 !important;
+}
+
+.MuiTab-root.Mui-selected {
+  color: #00ffff !important;
+  font-weight: 700 !important;
+}
+
+.MuiTypography-root {
+  color: inherit !important;
+}
+
+/* Input and control visibility */
+input[type="range"] {
+  background: transparent !important;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: linear-gradient(90deg, #334155, #475569) !important;
+  border-radius: 8px !important;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border: 3px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.5) !important;
+}
+
+/* Button visibility enhancements */
+button {
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+/* Specific overrides for components that might have dark text */
+h1, h2, h3, h4, h5, h6 {
+  color: inherit !important;
+}
+
+p, span, div, label {
+  color: inherit !important;
+}
+
+/* Scrollbar visibility */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(51, 65, 85, 0.5);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #10b981, #059669);
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #059669, #047857);
+}
+
+/* Comprehensive text visibility fixes for all dark text */
+* {
+  color: inherit !important;
+}
+
+/* Header and title text visibility */
+h1, h2, h3, h4, h5, h6, .text-4xl, .text-3xl, .text-2xl, .text-xl, .text-lg {
+  color: #e2e8f0 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7) !important;
+}
+
+/* Body text visibility */
+p, span, div, label, li, td, th {
+  color: #e2e8f0 !important;
+}
+
+/* Specific fixes for gradient text that might be invisible */
+.bg-clip-text {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+}
+
+/* Mermaid diagram text visibility - More aggressive approach */
+.mermaid text, .mermaid .node text, .mermaid .label, .mermaid tspan {
+  fill: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8) !important;
+}
+
+.mermaid .node rect, .mermaid .node circle, .mermaid .node ellipse, .mermaid .node polygon {
+  fill: rgba(20, 30, 48, 0.95) !important;
+  stroke: #10b981 !important;
+  stroke-width: 3px !important;
+}
+
+.mermaid .edgePath path {
+  stroke: #10b981 !important;
+  stroke-width: 3px !important;
+}
+
+.mermaid .marker {
+  fill: #10b981 !important;
+  stroke: #10b981 !important;
+}
+
+/* All Mermaid SVG elements text override */
+.mermaid svg text {
+  fill: #ffffff !important;
+  font-weight: bold !important;
+}
+
+/* Mermaid flowchart specific fixes */
+.mermaid .flowchart-node text {
+  fill: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.mermaid .cluster text, .mermaid .cluster-label text {
+  fill: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+/* Force visibility for specific text color classes */
+.text-slate-600, .text-slate-700, .text-slate-800, .text-slate-900,
+.text-gray-600, .text-gray-700, .text-gray-800, .text-gray-900,
+.text-neutral-600, .text-neutral-700, .text-neutral-800, .text-neutral-900 {
+  color: #e2e8f0 !important;
+}
+
+/* Interactive element text visibility */
+button, .btn, .button {
+  color: #e2e8f0 !important;
+  font-weight: 600 !important;
+}
+
+/* List item text visibility */
+ul li, ol li {
+  color: #e2e8f0 !important;
+}
+
+/* Table text visibility */
+table, thead, tbody, tfoot, tr, td, th {
+  color: #e2e8f0 !important;
+}
+
+/* Form element text visibility */
+input, textarea, select, option {
+  color: #e2e8f0 !important;
+  background-color: rgba(30, 41, 59, 0.8) !important;
+}
+
+/* System Architecture specific fixes */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Specific fixes for DhakaFlowchart component */
+.bg-gradient-to-r h1, .bg-gradient-to-r h2, .bg-gradient-to-r h3, .bg-gradient-to-r p {
+  color: #e2e8f0 !important;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8) !important;
+}
+
+/* Override any dark text in flowchart cards */
+.bg-gradient-to-br h3, .bg-gradient-to-br p {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7) !important;
+}
+
+/* Ensure all card text is visible */
+.rounded-xl h3, .rounded-xl p, .rounded-2xl h3, .rounded-2xl p {
+  color: #e2e8f0 !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6) !important;
+}
+
+/* Override any potentially invisible text colors */
+.text-transparent:not(.bg-clip-text) {
+  color: #e2e8f0 !important;
+}
+
+/* Make sure component specification text is visible */
+.text-teal-300, .text-teal-400, .text-emerald-300, .text-emerald-200,
+.text-blue-300, .text-blue-200, .text-purple-300, .text-purple-200,
+.text-orange-300, .text-orange-200, .text-yellow-300, .text-yellow-200,
+.text-red-300, .text-red-200, .text-cyan-300, .text-cyan-200 {
+  color: inherit !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+}
+
+/* Ensure feature list text is bright */
+ul li span:not(.bg-emerald-400):not(.bg-blue-400):not(.bg-purple-400) {
+  color: #e2e8f0 !important;
+}
+
+/* System Process Flow text visibility */
+.text-center {
+  color: #e2e8f0 !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.7) !important;
+}
+
+/* Comprehensive dark mode text visibility override */
+body, body *, div, span, p, h1, h2, h3, h4, h5, h6, li, td, th, label, a, button {
+  color: #e2e8f0 !important;
+}
+
+/* Force all SVG text elements to be visible */
+svg text, svg tspan {
+  fill: #ffffff !important;
+  font-weight: bold !important;
+}
+
+/* Exception for elements that should remain transparent (like gradient text) */
+.bg-gradient-to-r.bg-clip-text,
+.bg-gradient-to-l.bg-clip-text,
+.bg-gradient-to-t.bg-clip-text,
+.bg-gradient-to-b.bg-clip-text,
+.bg-gradient-to-br.bg-clip-text,
+.bg-gradient-to-bl.bg-clip-text,
+.bg-gradient-to-tr.bg-clip-text,
+.bg-gradient-to-tl.bg-clip-text {
+  color: transparent !important;
+}
+
+/* Bright white text for high contrast elements */
+.text-white, .text-slate-50, .text-gray-50, .text-neutral-50 {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5) !important;
+}
+
+/* Ensure all background gradients maintain readable text */
+[class*="bg-gradient-"] * {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6) !important;
+}
+
+/* Override any potentially dark text from Tailwind classes */
+[class*="text-slate-9"], [class*="text-gray-9"], [class*="text-neutral-9"],
+[class*="text-zinc-9"], [class*="text-stone-9"] {
+  color: #e2e8f0 !important;
+}
+
+/* Nuclear option - override absolutely everything with maximum specificity */
+html body div, html body span, html body p, html body h1, html body h2, html body h3, 
+html body h4, html body h5, html body h6, html body li, html body td, html body th, 
+html body label, html body a, html body button, html body text, html body tspan {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Re-allow transparent for gradient text backgrounds */
+.bg-clip-text, .bg-gradient-to-r.bg-clip-text, .bg-gradient-to-l.bg-clip-text,
+.bg-gradient-to-t.bg-clip-text, .bg-gradient-to-b.bg-clip-text {
+  color: transparent !important;
+}
+
+/* Mermaid diagram ultra-specific override */
+div.mermaid svg g.node text,
+div.mermaid svg g.node tspan,
+div.mermaid svg text,
+div.mermaid svg tspan,
+svg.mermaid text,
+svg.mermaid tspan,
+.mermaid g text,
+.mermaid g tspan {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+}
+
+/* Mermaid node styling with maximum specificity */
+div.mermaid svg g.node rect,
+div.mermaid svg g.node circle,
+div.mermaid svg g.node ellipse,
+div.mermaid svg g.node polygon,
+svg.mermaid g.node rect,
+svg.mermaid g.node circle {
+  fill: rgba(30, 41, 59, 0.95) !important;
+  stroke: #10b981 !important;
+  stroke-width: 2px !important;
+}
+
+/* All SVG text elements regardless of context */
+svg text, svg tspan, text, tspan {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Override any CSS that might set black or dark colors */
+[style*="color: black"], [style*="color: #000"], [style*="color: rgb(0,0,0)"],
+[style*="fill: black"], [style*="fill: #000"], [style*="fill: rgb(0,0,0)"] {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Browser default overrides */
+* {
+  color: #ffffff !important;
+}

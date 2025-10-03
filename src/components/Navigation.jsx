@@ -70,7 +70,8 @@ export const Navigation = ({ value, onChange }) => {
         <StyledTabs 
           value={value} 
           onChange={onChange}
-          centered
+          variant="scrollable"
+          scrollButtons="auto"
         >
           <Tab
             label={

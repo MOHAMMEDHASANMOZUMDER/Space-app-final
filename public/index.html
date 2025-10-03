@@ -150,9 +150,13 @@
                     <h3>Mission Overview</h3>
                     <div class="mermaid-chart">
                         <!-- Mermaid flowchart will be rendered here -->
-                        <div class="chart-placeholder">
-                            <i class="fas fa-sitemap"></i>
-                            <p>Mermaid Flowchart (Mission-level)</p>
+                        <div class="chart-placeholder" style="position:relative; max-height:420px; height:420px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                            <img id="mermaidThumb"
+                                 src="mermaid.png"
+                                 alt="Waste Recycling System"
+                                 style="max-width:100%; max-height:100%; object-fit:contain; cursor:pointer; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.45); display:block;"
+                                 title="Click to enlarge"
+                            />
                         </div>
                     </div>
                 </div>
@@ -587,6 +591,228 @@
             // The React app will be mounted via main.jsx
             // We'll need to modify main.jsx to mount components to specific divs
         });
+    </script>
+
+    <!-- Image modal for mermaid.png (enhanced) -->
+    <style>
+        /* Modal overlay */
+        #imageModalEnhanced {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            backdrop-filter: blur(6px);
+        }
+        /* inner container to allow small margins on very large screens */
+        #imageModalInner {
+            max-width: calc(100vw - 80px);
+            max-height: calc(100vh - 100px);
+            width: auto;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 12px;
+        }
+        /* full image styling */
+        #mermaidFullEnhanced {
+            max-width: calc(100% - 8px);
+            max-height: calc(100% - 8px);
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.7);
+            transform: scale(0.98);
+            opacity: 0;
+            transition: transform 220ms ease, opacity 220ms ease;
+        }
+        /* visible state */
+        #imageModalEnhanced.show { display:flex }
+        #imageModalEnhanced.show #mermaidFullEnhanced { transform: scale(1); opacity: 1 }
+        /* close button */
+        #imageModalCloseEnhanced {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            border: none;
+            width:36px;
+            height:36px;
+            border-radius: 18px;
+            font-size:20px;
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        @media (max-width: 640px){
+            #mermaidThumb{ max-height:280px }
+            #imageModalInner{ width: 98vw; height: 98vh }
+        }
+    </style>
+
+    <div id="imageModalEnhanced" role="dialog" aria-modal="true">
+        <div id="imageModalInner">
+            <button id="imageModalCloseEnhanced" aria-label="Close">✕</button>
+            <div id="imageModalToolbar" style="position:absolute; left:12px; top:12px; display:flex; gap:8px; z-index:10;">
+                <button id="zoomOutBtn" title="Zoom out" style="width:36px;height:36px;border-radius:18px;border:none;background:rgba(0,0,0,0.45);color:#fff;cursor:pointer;">−</button>
+                <button id="fitBtn" title="Fit to screen" style="width:36px;height:36px;border-radius:18px;border:none;background:rgba(0,0,0,0.45);color:#fff;cursor:pointer;">⤢</button>
+                <button id="zoomInBtn" title="Zoom in" style="width:36px;height:36px;border-radius:18px;border:none;background:rgba(0,0,0,0.45);color:#fff;cursor:pointer;">+</button>
+            </div>
+            <div id="imageViewport" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; touch-action:none;">
+                <img id="mermaidFullEnhanced" src="mermaid.png" alt="Waste Recycling System Full" style="transform-origin: center center; cursor:grab;" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            const thumb = document.getElementById('mermaidThumb');
+            const modal = document.getElementById('imageModalEnhanced');
+            const inner = document.getElementById('imageModalInner');
+            const closeBtn = document.getElementById('imageModalCloseEnhanced');
+            const fullImg = document.getElementById('mermaidFullEnhanced');
+
+            if(!thumb || !modal) return;
+
+            function openModal(){
+                fullImg.src = thumb.src; // allow separate hi-res path later
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                // force reflow for animation
+                void fullImg.offsetWidth;
+            }
+
+            function closeModal(){
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            thumb.addEventListener('click', openModal);
+            closeBtn.addEventListener('click', closeModal);
+
+            // Pan/zoom implementation
+            const img = fullImg;
+            const viewport = document.getElementById('imageViewport');
+            const zoomInBtn = document.getElementById('zoomInBtn');
+            const zoomOutBtn = document.getElementById('zoomOutBtn');
+            const fitBtn = document.getElementById('fitBtn');
+
+            let scale = 1;
+            let minScale = 0.5;
+            let maxScale = 4;
+            let startX = 0, startY = 0;
+            let translateX = 0, translateY = 0;
+            let isPanning = false;
+
+            function updateTransform(){
+                img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+            }
+
+            function fitToScreen(){
+                // Reset transforms and let CSS handle fit
+                scale = 1;
+                translateX = 0; translateY = 0;
+                img.style.transition = 'transform 180ms ease';
+                updateTransform();
+                setTimeout(()=> img.style.transition = '', 200);
+            }
+
+            zoomInBtn.addEventListener('click', ()=>{
+                scale = Math.min(maxScale, scale * 1.25);
+                updateTransform();
+            });
+            zoomOutBtn.addEventListener('click', ()=>{
+                scale = Math.max(minScale, scale / 1.25);
+                updateTransform();
+            });
+            fitBtn.addEventListener('click', fitToScreen);
+
+            // Wheel zoom
+            viewport.addEventListener('wheel', function(e){
+                e.preventDefault();
+                const delta = -e.deltaY || e.wheelDelta;
+                const zoomFactor = delta > 0 ? 1.12 : 0.9;
+                const newScale = Math.min(maxScale, Math.max(minScale, scale * zoomFactor));
+                // adjust translate so zoom centers on cursor
+                const rect = img.getBoundingClientRect();
+                const cx = e.clientX - rect.left;
+                const cy = e.clientY - rect.top;
+                const dx = (cx - rect.width/2) * (1 - newScale/scale);
+                const dy = (cy - rect.height/2) * (1 - newScale/scale);
+                translateX += dx;
+                translateY += dy;
+                scale = newScale;
+                updateTransform();
+            }, { passive:false });
+
+            // Drag to pan
+            img.addEventListener('mousedown', function(e){
+                isPanning = true;
+                startX = e.clientX - translateX;
+                startY = e.clientY - translateY;
+                img.style.cursor = 'grabbing';
+            });
+            window.addEventListener('mousemove', function(e){
+                if(!isPanning) return;
+                translateX = e.clientX - startX;
+                translateY = e.clientY - startY;
+                updateTransform();
+            });
+            window.addEventListener('mouseup', function(){
+                isPanning = false; img.style.cursor = 'grab';
+            });
+
+            // Touch: pinch/drag basics
+            let lastTouchDist = null;
+            viewport.addEventListener('touchstart', function(e){
+                if(e.touches.length === 2){
+                    const t0 = e.touches[0], t1 = e.touches[1];
+                    lastTouchDist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+                } else if(e.touches.length === 1){
+                    startX = e.touches[0].clientX - translateX;
+                    startY = e.touches[0].clientY - translateY;
+                }
+            }, { passive:false });
+            viewport.addEventListener('touchmove', function(e){
+                if(e.touches.length === 2){
+                    e.preventDefault();
+                    const t0 = e.touches[0], t1 = e.touches[1];
+                    const dist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
+                    if(lastTouchDist){
+                        const zoomFactor = dist / lastTouchDist;
+                        scale = Math.min(maxScale, Math.max(minScale, scale * zoomFactor));
+                        updateTransform();
+                    }
+                    lastTouchDist = dist;
+                } else if(e.touches.length === 1){
+                    translateX = e.touches[0].clientX - startX;
+                    translateY = e.touches[0].clientY - startY;
+                    updateTransform();
+                }
+            }, { passive:false });
+            viewport.addEventListener('touchend', function(e){ lastTouchDist = null; });
+
+            // Close on ESC
+            document.addEventListener('keydown', function(e){
+                if(e.key === 'Escape') closeModal();
+            });
+
+            // Close when clicking outside the inner content
+            modal.addEventListener('click', function(e){
+                if(e.target === modal) closeModal();
+            });
+
+            // Prevent clicks inside inner from closing
+            inner.addEventListener('click', function(e){ e.stopPropagation(); });
+        })();
     </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { HashRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { motion } from 'framer-motion';
@@ -6,12 +7,16 @@ import { SystemProvider } from './context/SystemContext';
 import Dashboard1 from './components/Dashboard1';
 import Dashboard2 from './components/Dashboard2';
 import Dashboard3 from './components/Dashboard3';
+import DhakaDashboard from './components/DhakaDashboard';
+import DhakaFlowchart from './components/DhakaFlowchart';
 import { Navigation } from './components/Navigation';
+import DhakaNavigation from './components/DhakaNavigation';
 import html2canvas from 'html2canvas';
 
 import { theme } from './styles/theme';
 
-function App() {
+// Main Dashboard Component (Dashboard 1, 2, 3)
+function MainDashboard() {
   const [tab, setTab] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -30,105 +35,181 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <SystemProvider>
-        <Box 
-          sx={{ 
-            minHeight: '100vh', 
-            bgcolor: 'background.default',
-            backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(0, 255, 255, 0.1) 0%, transparent 50%)',
+    <Box 
+      sx={{ 
+        minHeight: '100vh', 
+        bgcolor: 'background.default',
+        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(0, 255, 255, 0.1) 0%, transparent 50%)',
+      }}
+    >
+      <Box 
+        sx={{ 
+          maxWidth: '1440px', 
+          margin: '0 auto',
+          padding: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
+        <Box
+          component={motion.div}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '100%',
           }}
         >
+          <Navigation value={tab} onChange={handleChange} />
+          
           <Box 
+            className="dashboard-content"
             sx={{ 
-              maxWidth: '1440px', 
-              margin: '0 auto',
-              padding: { xs: 2, sm: 3, md: 4 },
+              position: 'relative',
+              '&::before': {
+                content: '""',
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '100%',
+                height: '100%',
+                background: 'radial-gradient(circle at center, rgba(0, 255, 255, 0.1) 0%, transparent 70%)',
+                pointerEvents: 'none',
+                zIndex: 0,
+              }
             }}
           >
-            <Box
-              component={motion.div}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+            {tab === 0 && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Dashboard1 />
+              </motion.div>
+            )}
+            {tab === 1 && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Dashboard2 />
+              </motion.div>
+            )}
+            {tab === 2 && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Dashboard3 />
+              </motion.div>
+            )}
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={exportDashboard}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2,
-                width: '100%',
+                borderColor: 'rgba(0, 255, 255, 0.3)',
+                color: '#00ffff',
+                '&:hover': {
+                  borderColor: '#00ffff',
+                  backgroundColor: 'rgba(0, 255, 255, 0.1)',
+                }
               }}
             >
-              <Navigation value={tab} onChange={handleChange} />
-              
-              <Box 
-                className="dashboard-content"
-                sx={{ 
-                  position: 'relative',
-                  '&::before': {
-                    content: '""',
-                    position: 'fixed',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '100%',
-                    height: '100%',
-                    background: 'radial-gradient(circle at center, rgba(0, 255, 255, 0.1) 0%, transparent 70%)',
-                    pointerEvents: 'none',
-                    zIndex: 0,
-                  }
-                }}
-              >
-                {tab === 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Dashboard1 />
-                  </motion.div>
-                )}
-                {tab === 1 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Dashboard2 />
-                  </motion.div>
-                )}
-                {tab === 2 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Dashboard3 />
-                  </motion.div>
-                )}
-              </Box>
-
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-                <Button
-                  variant="outlined"
-                  onClick={exportDashboard}
-                  sx={{
-                    borderColor: 'rgba(0, 255, 255, 0.3)',
-                    color: '#00ffff',
-                    '&:hover': {
-                      borderColor: '#00ffff',
-                      backgroundColor: 'rgba(0, 255, 255, 0.1)',
-                    }
-                  }}
-                >
-                  Export Dashboard
-                </Button>
-              </Box>
-            </Box>
+              Export Dashboard
+            </Button>
           </Box>
         </Box>
+      </Box>
+    </Box>
+  );
+}
+
+// Standalone Page Layout for Dhaka components
+function StandalonePage({ children }) {
+  return (
+    <Box 
+      sx={{ 
+        minHeight: '100vh', 
+        bgcolor: 'background.default',
+        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(0, 255, 255, 0.1) 0%, transparent 50%)',
+      }}
+    >
+      <Box 
+        sx={{ 
+          maxWidth: '1440px', 
+          margin: '0 auto',
+          padding: { xs: 2, sm: 3, md: 4 },
+        }}
+      >
+        <Box
+          component={motion.div}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            width: '100%',
+          }}
+        >
+          {children}
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <SystemProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<MainDashboard />} />
+            <Route 
+              path="/dhakadashboard" 
+              element={
+                <StandalonePage>
+                  <DhakaNavigation currentPage="dashboard" />
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <DhakaDashboard />
+                  </motion.div>
+                </StandalonePage>
+              } 
+            />
+            <Route 
+              path="/dhakaflowchart" 
+              element={
+                <StandalonePage>
+                  <DhakaNavigation currentPage="flowchart" />
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <DhakaFlowchart />
+                  </motion.div>
+                </StandalonePage>
+              } 
+            />
+          </Routes>
+        </Router>
       </SystemProvider>
     </ThemeProvider>
   );

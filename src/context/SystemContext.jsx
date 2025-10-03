@@ -105,13 +105,8 @@ export function SystemProvider({ children }) {
       const site = siteMap[regolithType] || 'jezero';
       
       try {
-        // Try to fetch from local server first
-        let response = await fetch(`/api/regolith?site=${site}`);
-        
-        if (!response.ok) {
-          // Fallback to local JSON file in public folder
-          response = await fetch(`/data/regolith_${site}.json`);
-        }
+        // Try to fetch directly from public folder
+        const response = await fetch(`/data/regolith_${site}.json`);
         
         if (response.ok) {
           const data = await response.json();
