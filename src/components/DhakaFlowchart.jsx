@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 const DhakaFlowchart = () => {
   const [selectedComponent, setSelectedComponent] = useState(null);
-  const [mermaidLoaded, setMermaidLoaded] = useState(false);
+  const [isFlowchartEnlarged, setIsFlowchartEnlarged] = useState(false);
 
   // Component specifications for M-REGS-P Dhaka
   const componentSpecs = {
@@ -80,92 +80,12 @@ const DhakaFlowchart = () => {
     }
   };
 
-  useEffect(() => {
-    // Load Mermaid library
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
-    script.onload = () => {
-      window.mermaid.initialize({
-        startOnLoad: true,
-        theme: 'dark',
-        themeVariables: {
-          primaryColor: '#10b981',
-          primaryTextColor: '#e2e8f0',
-          primaryBorderColor: '#059669',
-          lineColor: '#94a3b8',
-          sectionBkgColor: '#374151',
-          altSectionBkgColor: '#4b5563',
-          gridColor: '#6b7280',
-          secondaryColor: '#06b6d4',
-          tertiaryColor: '#f59e0b',
-          background: '#1e293b',
-          mainBkg: '#334155',
-          secondBkg: '#475569',
-          tertiaryBkg: '#64748b',
-          cScale0: '#10b981',
-          cScale1: '#06b6d4',
-          cScale2: '#8b5cf6',
-          cScale3: '#f59e0b',
-          cScale4: '#ef4444',
-          cScale5: '#ec4899'
-        }
-      });
-      setMermaidLoaded(true);
-    };
-    document.head.appendChild(script);
-
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (mermaidLoaded) {
-      window.mermaid.contentLoaded();
-    }
-  }, [mermaidLoaded]);
-
-  const mermaidChart = `
-    graph TD
-        A[🗂️ Plastic Waste Collection<br/>50-500 kg/day] --> B[⚙️ Automated Sorting<br/>75% Recovery Rate]
-        B --> C[🔨 Plastic Shredding<br/>400 kg/hr Processing]
-        C --> D[🚿 Washing System<br/>15L Water per kg]
-        D --> E[🌡️ Thermal Drying<br/>92% Moisture Removal]
-        
-        E --> F[⚡ SOFC Microgenerator<br/>2.5 kWh per kg]
-        E --> G[🔄 Direct Recycling<br/>Extrusion Process]
-        
-        F --> H[🔥 Thermal Recovery<br/>35% Heat Capture]
-        H --> I[♻️ Process Heat Reuse<br/>80% Efficiency]
-        I --> D
-        I --> E
-        
-        J[☀️ Solar Panel Array<br/>50m² • 9kW Peak] --> K[🔋 Energy Storage<br/>Battery System]
-        F --> K
-        H --> K
-        
-        K --> L[⚡ Grid Integration<br/>Self-Sufficiency Mode]
-        K --> M[🏭 System Operations<br/>All Processing Units]
-        
-        D --> N[💧 Water Treatment<br/>85% Recovery Rate]
-        N --> O[♻️ Water Recycling<br/>99.5% Purity]
-        O --> D
-        
-        P[🌐 NASA Weather API<br/>Solar Irradiance Data] --> J
-        Q[📊 Control Dashboard<br/>Real-time Monitoring] --> A
-        Q --> F
-        Q --> J
-        
-        style A fill:#e8f5e8,stroke:#059669,stroke-width:3px
-        style F fill:#fef3c7,stroke:#f59e0b,stroke-width:3px
-        style J fill:#dbeafe,stroke:#3b82f6,stroke-width:3px
-        style K fill:#f3e8ff,stroke:#8b5cf6,stroke-width:3px
-        style N fill:#e0f2fe,stroke:#0891b2,stroke-width:3px
-        style Q fill:#fce7f3,stroke:#ec4899,stroke-width:3px
-  `;
-
   const handleComponentClick = (componentId) => {
     setSelectedComponent(componentId);
+  };
+
+  const toggleFlowchartSize = () => {
+    setIsFlowchartEnlarged(!isFlowchartEnlarged);
   };
 
   return (
@@ -190,29 +110,29 @@ const DhakaFlowchart = () => {
         </div>
 
         {/* System Overview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-emerald-600/90 to-teal-700/90 rounded-xl p-4 text-white shadow-2xl shadow-emerald-500/30 border border-emerald-400/20 backdrop-blur-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="relative bg-gradient-to-br from-emerald-600/90 to-teal-700/90 rounded-xl p-4 text-white shadow-2xl shadow-emerald-500/30 border border-emerald-400/20 backdrop-blur-sm">
             <div className="text-3xl mb-2 drop-shadow-lg">♻️</div>
             <h3 className="font-bold text-lg text-shadow">Plastic Processing</h3>
             <p className="text-emerald-100 text-sm text-shadow">Sort → Shred → Wash → Dry</p>
             <div className="absolute top-2 right-2 w-2 h-2 bg-emerald-300 rounded-full animate-pulse"></div>
           </div>
           
-          <div className="bg-gradient-to-br from-orange-600/90 to-red-700/90 rounded-xl p-4 text-white shadow-2xl shadow-orange-500/30 border border-orange-400/20 backdrop-blur-sm">
+          <div className="relative bg-gradient-to-br from-orange-600/90 to-red-700/90 rounded-xl p-4 text-white shadow-2xl shadow-orange-500/30 border border-orange-400/20 backdrop-blur-sm">
             <div className="text-3xl mb-2 drop-shadow-lg">⚡</div>
             <h3 className="font-bold text-lg text-shadow">Energy Generation</h3>
             <p className="text-orange-100 text-sm text-shadow">SOFC + Solar + Thermal</p>
             <div className="absolute top-2 right-2 w-2 h-2 bg-orange-300 rounded-full animate-pulse"></div>
           </div>
           
-          <div className="bg-gradient-to-br from-blue-600/90 to-cyan-700/90 rounded-xl p-4 text-white shadow-2xl shadow-blue-500/30 border border-blue-400/20 backdrop-blur-sm">
+          <div className="relative bg-gradient-to-br from-blue-600/90 to-cyan-700/90 rounded-xl p-4 text-white shadow-2xl shadow-blue-500/30 border border-blue-400/20 backdrop-blur-sm">
             <div className="text-3xl mb-2 drop-shadow-lg">💧</div>
             <h3 className="font-bold text-lg text-shadow">Water Management</h3>
             <p className="text-blue-100 text-sm text-shadow">85% Recycling Rate</p>
             <div className="absolute top-2 right-2 w-2 h-2 bg-blue-300 rounded-full animate-pulse"></div>
           </div>
           
-          <div className="bg-gradient-to-br from-purple-600/90 to-indigo-700/90 rounded-xl p-4 text-white shadow-2xl shadow-purple-500/30 border border-purple-400/20 backdrop-blur-sm">
+          <div className="relative bg-gradient-to-br from-purple-600/90 to-indigo-700/90 rounded-xl p-4 text-white shadow-2xl shadow-purple-500/30 border border-purple-400/20 backdrop-blur-sm">
             <div className="text-3xl mb-2 drop-shadow-lg">🌐</div>
             <h3 className="font-bold text-lg text-shadow">Smart Controls</h3>
             <p className="text-purple-100 text-sm text-shadow">NASA API + Dashboard</p>
@@ -221,27 +141,46 @@ const DhakaFlowchart = () => {
         </div>
 
         {/* Main Flowchart */}
-        <div className="bg-gradient-to-br from-slate-800/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-8 mb-6 border border-teal-500/30 shadow-2xl shadow-teal-500/20">
+        <div className="bg-gradient-to-br from-slate-800/95 to-gray-800/95 backdrop-blur-sm rounded-2xl p-6 mb-6 border border-teal-500/30 shadow-2xl shadow-teal-500/20">
           <h2 className="text-2xl font-bold text-teal-300 mb-6 text-center text-shadow">
             System Process Flow Diagram
           </h2>
           
-          <div className="flex justify-center items-center min-h-[600px]">
-            {mermaidLoaded ? (
-              <div 
-                className="mermaid w-full" 
-                style={{ fontSize: '14px', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }}
-              >
-                {mermaidChart}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal-400 mx-auto mb-4 shadow-lg shadow-teal-400/50"></div>
-                  <p className="text-teal-300 font-semibold text-shadow">Loading System Diagram...</p>
+          <div className="flowchart-container w-full">
+            <div className="relative group w-full">
+              <img 
+                src="/dhflow.png" 
+                alt="Dhaka Plastic Recycling System Flow Diagram"
+                className={`flowchart-image rounded-lg shadow-2xl transition-all duration-300 cursor-pointer hover:shadow-teal-500/30 ${
+                  isFlowchartEnlarged 
+                    ? 'fixed inset-6 z-50 max-w-none max-h-none bg-slate-900/95 backdrop-blur-sm' 
+                    : ''
+                }`}
+                onClick={toggleFlowchartSize}
+                style={{
+                  filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
+                  border: '2px solid rgba(20, 184, 166, 0.3)'
+                }}
+              />
+              
+              {/* Click to enlarge hint */}
+              {!isFlowchartEnlarged && (
+                <div className="absolute top-4 right-4 bg-teal-600/90 text-white px-3 py-1 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  🔍 Click to enlarge
                 </div>
-              </div>
-            )}
+              )}
+              
+              {/* Close button for enlarged view */}
+              {isFlowchartEnlarged && (
+                <button
+                  onClick={toggleFlowchartSize}
+                  className="fixed top-8 right-8 z-50 bg-red-600 hover:bg-red-700 text-white rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold transition-colors duration-200 shadow-lg"
+                  aria-label="Close enlarged view"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -434,23 +373,72 @@ const DhakaFlowchart = () => {
           background: rgba(20, 184, 166, 0.8);
         }
         
-        /* Aggressive Mermaid text visibility fixes */
-        .mermaid svg text,
-        .mermaid svg tspan,
-        .mermaid text,
-        .mermaid tspan {
-          fill: #ffffff !important;
-          color: #ffffff !important;
-          font-weight: bold !important;
-          font-size: 14px !important;
+        /* Flowchart image styles */
+        .flowchart-container {
+          position: relative;
+          overflow: hidden;
+          border-radius: 12px;
         }
         
-        .mermaid .node rect,
-        .mermaid .node circle,
-        .mermaid .node ellipse {
-          fill: rgba(30, 41, 59, 0.95) !important;
-          stroke: #10b981 !important;
-          stroke-width: 2px !important;
+        .flowchart-image {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+          background: transparent;
+        }
+        
+        .flowchart-image:hover {
+          transform: scale(1.005);
+          box-shadow: 0 12px 30px rgba(20, 184, 166, 0.4);
+        }
+        
+        /* Optimal sizing for the wide flowchart format */
+        .flowchart-image:not(.fixed) {
+          max-width: 100%;
+          width: 100%;
+          height: auto;
+          min-height: 400px;
+        }
+        
+        /* Enhanced enlarged view */
+        .flowchart-image.fixed {
+          padding: 20px;
+          border-radius: 16px;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+          .flowchart-image:not(.fixed) {
+            min-height: 350px;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          .flowchart-image:not(.fixed) {
+            min-height: 300px;
+          }
+          
+          .flowchart-image.fixed {
+            padding: 10px;
+          }
+        }
+        
+        /* Prevent image overflow */
+        .flowchart-image {
+          display: block;
+          margin: 0 auto;
+        }
+        
+        .enlarged-overlay {
+          backdrop-filter: blur(8px);
+          animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
         
         /* Force all text to be visible */
@@ -494,3 +482,4 @@ const DhakaFlowchart = () => {
 };
 
 export default DhakaFlowchart;
+       

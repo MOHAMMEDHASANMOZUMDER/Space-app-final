@@ -460,30 +460,74 @@
             </div>
             
             <div class="comparison-graphic">
-                <div class="version-comparison">
-                    <div class="mars-version">
-                        <h3><i class="fas fa-rocket"></i> Mars Version</h3>
-                        <div class="version-features">
-                            <p>Full M-REGS system</p>
-                            <ul>
-                                <li>Multi-stream recycling</li>
-                                <li>Regolith processing</li>
-                                <li>Thermal integration</li>
-                                <li>Life support integration</li>
+                <div class="version-comparison" style="display: flex; flex-direction: column; gap: 40px;">
+                    <!-- Mars/Bangladesh System Section -->
+                    <div class="mars-version" style="width: 100%; max-width: 1200px; margin: 0 auto;">
+                        <div class="version-header" style="text-align: center; margin-bottom: 20px;">
+                            <h3 style="color: #63b3ed; margin-bottom: 12px;"><i class="fas fa-rocket"></i> Mars M-REGS System Architecture</h3>
+                        </div>
+                        <div class="version-features" style="background: linear-gradient(135deg, #1a1f2e, #2d3748); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                            <p style="color: #e2e8f0; margin-bottom: 15px;">Complete M-REGS flowchart showing the full multi-stream recycling system</p>
+                            <ul style="color: #a0aec0; margin: 0; padding-left: 20px;">
+                                <li>Multi-stream recycling (plastics, metals, organics)</li>
+                                <li>Regolith processing for construction materials</li>
+                                <li>Thermal integration with heat recovery loops</li>
+                                <li>Life support integration for habitat systems</li>
+                                <li>SOFC fuel cell electricity generation</li>
                             </ul>
+                        </div>
+                        
+                        <div class="dashboard-embedded mars-flowchart">
+                            <div class="dashboard-header" style="text-align: center; margin-bottom: 15px;">
+                                <h4 style="color: #e2e8f0; margin-bottom: 8px;"><i class="fas fa-project-diagram"></i> Interactive System Flowchart</h4>
+                                <p style="color: #a0aec0; margin: 0;">Comprehensive system architecture for Mars deployment with full waste processing capabilities</p>
+                            </div>
+                            
+                            <div class="dashboard-iframe-container">
+                                <iframe src="https://space-app-final-o69x.vercel.app/#/dhakaflowchart" 
+                                        style="width: 100%; height: 900px; border: none; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);"
+                                        title="Mars M-REGS System Architecture Flowchart"
+                                        allowfullscreen
+                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="earth-version">
-                        <h3><i class="fas fa-globe"></i> Dhaka Version</h3>
-                        <div class="version-features">
-                            <p>Plastic-focused system</p>
-                            <ul>
-                                <li>Plastic-only processing</li>
-                                <li>Solar power integration</li>
-                                <li>Urban deployment ready</li>
-                                <li>Community resilience focus</li>
+                    <!-- Earth/Dhaka System Section -->
+                    <div class="earth-version" style="width: 100%; max-width: 1200px; margin: 0 auto;">
+                        <div class="version-header" style="text-align: center; margin-bottom: 20px;">
+                            <h3 style="color: #68d391; margin-bottom: 12px;"><i class="fas fa-globe"></i> Dhaka Urban Application</h3>
+                        </div>
+                        <div class="version-features" style="background: linear-gradient(135deg, #1a2f1a, #2d4a2d); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                            <p style="color: #e2e8f0; margin-bottom: 15px;">Simplified plastic-focused system adapted for urban deployment in Dhaka, Bangladesh</p>
+                            <ul style="color: #a0aec0; margin: 0; padding-left: 20px;">
+                                <li>Plastic-only processing for urban waste streams</li>
+                                <li>Solar power integration with weather data</li>
+                                <li>Urban deployment ready for city infrastructure</li>
+                                <li>Community resilience focus for developing nations</li>
+                                <li>Real-time monitoring and control systems</li>
                             </ul>
+                        </div>
+                        
+                        <div class="dashboard-embedded dhaka-dashboard">
+                            <div class="dashboard-header" style="text-align: center; margin-bottom: 15px;">
+                                <h4 style="color: #e2e8f0; margin-bottom: 8px;"><i class="fas fa-chart-area"></i> Interactive Dhaka System Dashboard</h4>
+                                <p style="color: #a0aec0; margin: 0;">Real-time monitoring of plastic waste processing with solar integration and urban metrics</p>
+                            </div>
+                            
+                            <div class="dashboard-iframe-container">
+                                <iframe src="https://space-app-final-o69x.vercel.app/#/dhakadashboard" 
+                                        style="width: 100%; height: 900px; border: none; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);"
+                                        title="Dhaka Urban Waste2Watt Dashboard"
+                                        allowfullscreen
+                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -812,6 +856,86 @@
 
             // Prevent clicks inside inner from closing
             inner.addEventListener('click', function(e){ e.stopPropagation(); });
+        })();
+    </script>
+
+    <!-- Iframe Error Handling Script -->
+    <script>
+        (function() {
+            // Function to handle iframe loading errors
+            function handleIframeError(iframe, fallbackUrl) {
+                iframe.addEventListener('error', function() {
+                    console.log('Iframe failed to load, attempting fallback...');
+                    iframe.src = fallbackUrl;
+                });
+
+                // Check if iframe loaded successfully after a timeout
+                setTimeout(function() {
+                    try {
+                        // Try to access iframe content to check if it loaded
+                        if (iframe.contentWindow.location.href === 'about:blank') {
+                            console.log('Iframe appears to be blocked, reloading...');
+                            iframe.src = iframe.src + '?retry=' + Date.now();
+                        }
+                    } catch (e) {
+                        // Cross-origin error is expected, but iframe might still work
+                        console.log('Cross-origin restriction detected (normal)');
+                    }
+                }, 3000);
+            }
+
+            // Wait for DOM to be ready
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get all iframes in the dashboard sections
+                const iframes = document.querySelectorAll('.dashboard-iframe-container iframe');
+                
+                iframes.forEach(function(iframe) {
+                    // Add loading indicator
+                    const container = iframe.parentElement;
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.innerHTML = `
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                                    background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 8px;
+                                    display: flex; align-items: center; gap: 10px; z-index: 10;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <span>Loading dashboard...</span>
+                        </div>
+                    `;
+                    loadingDiv.style.cssText = 'position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none;';
+                    container.style.position = 'relative';
+                    container.appendChild(loadingDiv);
+
+                    // Remove loading indicator when iframe loads
+                    iframe.addEventListener('load', function() {
+                        loadingDiv.remove();
+                    });
+
+                    // Handle errors and add retry mechanism
+                    handleIframeError(iframe, iframe.src);
+                    
+                    // Add click overlay for better interaction
+                    iframe.addEventListener('load', function() {
+                        iframe.style.pointerEvents = 'auto';
+                    });
+                });
+            });
+
+            // Add CSS for iframe interactions
+            const style = document.createElement('style');
+            style.textContent = `
+                .dashboard-iframe-container iframe {
+                    transition: opacity 0.3s ease;
+                }
+                .dashboard-iframe-container iframe:hover {
+                    opacity: 0.95;
+                }
+                .dashboard-iframe-container {
+                    background: linear-gradient(135deg, #1a1f2e, #2d3748);
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+            `;
+            document.head.appendChild(style);
         })();
     </script>
 </body>
