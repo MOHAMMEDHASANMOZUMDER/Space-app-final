@@ -166,7 +166,7 @@ const DhakaFlowchart = () => {
       wasteUtilization,
       co2Avoided
     };
-  }, [wasteIntake, diversionOverride, dhakaSolarIrradiance]); // Dependencies for calculation
+  }, [wasteIntake, diversionOverride, solarIrradiance]); // Dependencies for calculation
   
   const metrics = React.useMemo(() => calculateMetrics(), [calculateMetrics]);
   
