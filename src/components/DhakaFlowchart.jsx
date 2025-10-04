@@ -77,7 +77,7 @@ const DhakaFlowchart = () => {
   const [isFlowchartEnlarged, setIsFlowchartEnlarged] = useState(false);
   
   // Calculate real-time system metrics
-  const calculateMetrics = () => {
+  const calculateMetrics = React.useCallback(() => {
     const dailyWaste = wasteIntake;
     const totalWaste = dailyWaste * projectionDays;
     
@@ -125,6 +125,16 @@ const DhakaFlowchart = () => {
     const netEnergyOutput = totalEnergyGenerated - systemConsumption;
     const energySelfSufficiency = Math.min((totalEnergyGenerated / systemConsumption) * 100, 100);
     
+    // Debug: Log energy calculations for troubleshooting
+    console.log('🎯 DHAKA FLOWCHART - SELF-SUFFICIENCY CALCULATION:', {
+      '⚡ Energy Self-Sufficiency': `${energySelfSufficiency.toFixed(2)}%`,
+      '🔋 Total Generated': `${totalEnergyGenerated.toFixed(2)} kWh`,
+      '⚙️ System Consumption': `${systemConsumption.toFixed(2)} kWh`,
+      '🗂️ Waste Intake': `${wasteIntake} kg/day`,
+      '🔄 Diversion Mode': diversionOverride,
+      '☀️ Solar Irradiance': `${solarIrradiance.toFixed(2)} kWh/m²/day`
+    });
+    
     // Water recycling (improves with higher pyrolyzer usage)
     const waterRecycleRate = diversionOverride ? 95 : 85; // Higher efficiency in pyrolyzer mode
     const waterReused = (plasticWashed * 15 * waterRecycleRate) / 100; // 15L per kg, with recycling rate
@@ -156,9 +166,9 @@ const DhakaFlowchart = () => {
       wasteUtilization,
       co2Avoided
     };
-  };
+  }, [wasteIntake, diversionOverride, dhakaSolarIrradiance]); // Dependencies for calculation
   
-  const metrics = calculateMetrics();
+  const metrics = React.useMemo(() => calculateMetrics(), [calculateMetrics]);
   
   // Determine system status based on performance
   const getSystemStatus = () => {

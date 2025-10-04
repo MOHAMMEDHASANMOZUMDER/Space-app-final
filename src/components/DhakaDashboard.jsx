@@ -55,6 +55,9 @@ const DhakaDashboard = () => {
     setDhakaSystemOperational
   } = useSystem();
   
+  // Calculation counter to track updates
+  const [calculationCount, setCalculationCount] = useState(0);
+  
   // Location and weather data
   const [latitude, setLatitude] = useState(23.8103); // Dhaka coordinates
   const [longitude, setLongitude] = useState(90.4125);
@@ -83,8 +86,8 @@ const DhakaDashboard = () => {
     setLoading(false);
   };
 
-  // Calculate comprehensive system metrics
-  const calculateMetrics = () => {
+  // Calculate comprehensive system metrics with useCallback to ensure proper dependency tracking
+  const calculateMetrics = React.useCallback(() => {
     const dailyWaste = wasteIntake;
     const totalWaste = dailyWaste * projectionDays;
     
@@ -130,7 +133,22 @@ const DhakaDashboard = () => {
     const systemConsumption = baseConsumption + printerConsumption + pyrolyzerConsumption;
     
     const netEnergyOutput = totalEnergyGenerated - systemConsumption;
-    const energySelfSufficiency = Math.min((totalEnergyGenerated / systemConsumption) * 100, 100);
+    const energySelfSufficiencyRaw = (totalEnergyGenerated / systemConsumption) * 100;
+    const energySelfSufficiency = Math.min(energySelfSufficiencyRaw, 100);
+    
+    // Debug: Log energy calculations for troubleshooting
+    console.log('🔥 DHAKA DASHBOARD - SELF-SUFFICIENCY CALCULATION:', {
+      '⚡ Raw Self-Sufficiency': `${energySelfSufficiencyRaw.toFixed(2)}%`,
+      '⚡ Capped Self-Sufficiency': `${energySelfSufficiency.toFixed(2)}%`,
+      '🔋 Total Generated': `${totalEnergyGenerated.toFixed(2)} kWh`,
+      '⚙️ System Consumption': `${systemConsumption.toFixed(2)} kWh`,
+      '📊 SOFC Energy': `${solfcEnergy.toFixed(2)} kWh`,
+      '☀️ Solar Energy': `${solarEnergy.toFixed(2)} kWh`,
+      '🔥 Thermal Reuse': `${thermalReuse.toFixed(2)} kWh`,
+      '🗂️ Waste Intake': `${wasteIntake} kg/day`,
+      '🔄 Diversion Mode': diversionOverride,
+      '☀️ Solar Irradiance': `${solarIrradiance.toFixed(2)} kWh/m²/day`
+    });
     
     // Water recycling (improves with higher pyrolyzer usage)
     const waterRecycleRate = diversionOverride ? 95 : 85; // Higher efficiency in pyrolyzer mode
@@ -163,9 +181,14 @@ const DhakaDashboard = () => {
       wasteUtilization,
       co2Avoided
     };
-  };
+  }, [wasteIntake, diversionOverride, dhakaSolarIrradiance]); // Dependencies for calculation
 
-  const metrics = calculateMetrics();
+  const metrics = React.useMemo(() => calculateMetrics(), [calculateMetrics]);
+
+  // Update calculation counter when metrics change
+  useEffect(() => {
+    setCalculationCount(prev => prev + 1);
+  }, [wasteIntake, diversionOverride, dhakaSolarIrradiance]);
 
   // Chart data (scaled by projection days)
   const energyData = [
@@ -926,7 +949,10 @@ const DhakaDashboard = () => {
                 <Box>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                     <Typography sx={{ color: '#d1d5db' }}>Energy Self-Sufficiency</Typography>
-                    <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{metrics.energySelfSufficiency.toFixed(1)}%</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography sx={{ color: '#10b981', fontWeight: 600 }}>{metrics.energySelfSufficiency.toFixed(1)}%</Typography>
+                      <Typography sx={{ color: '#6b7280', fontSize: '0.7rem' }}>#{calculationCount}</Typography>
+                    </Box>
                   </Box>
                   <LinearProgress 
                     variant="determinate" 
